@@ -1,0 +1,94 @@
+/* Geral */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color:#f0ebf8;
+}
+
+/* Formulário */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+/* Boxes arredondados */
+.form-box {
+    display: inline;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+}
+
+input{
+    border-radius: 5px;
+    width: 95%;
+    padding: 1%;
+    margin-top: 5%;
+}
+
+
+input[type="radio"]{
+    border-radius: 5px;
+    width: auto;
+    padding: 1%;
+    margin-top: 5%;
+}
+
+
+/* Labels */
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display:flex ;
+    border-radius: 5px;
+}
+
+/* Botões */
+button {
+    padding: 10px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
+    margin-top: 10px;
+    
+}
+
+button:hover {
+    background-color: #4B0082;
+}
+text {
+    margin-bottom: 10%;
+    font-weight:normal;
+
+}
+
+.form-box-img img {
+    width: 100%; /* A imagem ocupará 100% da largura do container */
+    height: auto; /* A altura será ajustada automaticamente para manter a proporção */
+}
+
+/* Estilo para o campo de upload */
+input[type="file"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    width: 95%;
+}
+
+/* Estilo adicional para o rótulo */
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
