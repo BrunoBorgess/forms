@@ -5,6 +5,53 @@ body {
     background-color:#f0ebf8;
 }
 
+.login-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.login-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.user-email {
+    font-weight: bold;
+    color: #333;
+}
+
+.change-account {
+    color: #4285F4;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.change-account:hover {
+    text-decoration: underline;
+}
+
+.cloud-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+
+
 /* Formulário */
 form {
     max-width: 600px;

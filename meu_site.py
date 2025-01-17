@@ -5,9 +5,14 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 import os
+from flask import Flask, redirect, url_for, session
+
+
+
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
+
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -15,6 +20,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Página inicial com o formulário
 @app.route("/", methods=["GET", "POST"])
+
 def form():
     if request.method == "POST":
         # Capturar os dados do formulário
@@ -110,6 +116,3 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade_estado,
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
