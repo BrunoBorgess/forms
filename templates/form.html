@@ -11,21 +11,53 @@
 <body>
 
     <form action="/" method="POST" enctype="multipart/form-data">
+        
 
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+
+        <script>
+          // Função para forçar a troca de conta
+        function changeAccount() {
+            google.accounts.id.prompt(); // Isso abre a caixa de seleção de contas para mudança.
+        }
+        window.onload = function () {
+            google.accounts.id.initialize({
+            client_id: '0652723540-2ba6g91icqa4mmdge8ln9rd3bv5k0tf2.apps.googleusercontent.com',
+            callback: handleCredentialResponse 
+            });
+        
+            google.accounts.id.renderButton(
+            document.getElementById("google-signin-button"),
+            { theme: "outline", size: "large" }
+            );
+        };
+        function handleCredentialResponse(response) {
+            const data = jwt_decode(response.credential); // Decodifica o JWT para pegar dados do usuário
+            console.log("Usuário autenticado:", data);
+        
+            window.location.href = `http://127.0.0.1:5000/?accountName=${data.name}&accountEmail=${data.email}`;
+        }
+        </script>
+
+        
         <div class="form-box">
         <label>Procedimentos de login</label>
+        <hr>
         <div class="account-info">
-            <span id="user-email">Realização do cadastro</span>
-            <a href="https://accounts.google.com/AccountChooser" target="_blank">Mudar de conta</a>
+            <span id="user-email">usuarioteste@gmail.com</span>
+            <a href="#" onclick="changeAccount()" class="text-button">Mudar de Conta</a>
+            <div id="google-signin-button"></div>
+            <span id="cima">O nome, a foto e o e-mail associados à sua Conta do Google serão registrados quando você fizer upload de arquivos e enviar este formulário.</span>
+            <hr>
+            <span id="indica">* Indica uma pergunta obrigatória</span>
         </div>
-
         </div>
+        
 
-        <div class="form-box-img">
+        <div class="form-box">
             <img src="/static/css/image/logo.png" alt="Logo da Empresa" class="logo">
-
         </div>
-
         <!-- Nome Completo -->
         <div class="form-box">
             <label>Nome Completo:</label>

@@ -5,50 +5,7 @@ body {
     background-color:#f0ebf8;
 }
 
-.login-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 10px;
-}
 
-.user-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.login-info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-}
-
-.user-email {
-    font-weight: bold;
-    color: #333;
-}
-
-.change-account {
-    color: #4285F4;
-    text-decoration: none;
-    font-size: 12px;
-}
-
-.change-account:hover {
-    text-decoration: underline;
-}
-
-.cloud-icon img {
-    width: 20px;
-    height: 20px;
-}
 
 
 
@@ -71,6 +28,12 @@ form {
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     
+}
+
+
+.form-box .logo {
+    max-width: 100%;     
+    height: auto;       
 }
 
 input{
@@ -138,4 +101,50 @@ label {
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
+}
+
+.account-info {
+    margin-bottom: 30px;
+    margin-top: 30px;
+
+}
+
+#user-email {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#cima {
+    display: block; /* Faz com que o texto ocupe uma linha própria */
+    margin-bottom: 20px;
+    font-size: small; /* Espaço abaixo da descrição */
+}
+
+hr {
+    margin: 10px 0; /* Espaçamento acima e abaixo da linha horizontal */
+    display: block;
+}
+
+#indica {
+    display: block; /* Faz com que o texto ocupe uma linha própria */
+    margin-top: 20px;
+    color: red /* Espaço acima do texto de indicação */
+    
+}
+#google-signin-button {
+    margin-top: 30;
+    margin-bottom: 30;
+}
+
+.text-button {
+    color: #007bff; /* Cor do texto */
+    text-decoration: none; /* Remover sublinhado */
+    font-size: 16px; /* Tamanho do texto */
+    font-weight: bold; /* Texto em negrito */
+    cursor: pointer; /* Mostrar cursor de ponteiro */
+}
+
+.text-button:hover {
+    color: #0056b3; /* Cor do texto ao passar o mouse */
+    text-decoration: underline; /* Sublinha quando o mouse passa por cima */
 }
