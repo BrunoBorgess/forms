@@ -24,10 +24,10 @@ form {
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 6px;
-    padding: 20px;
+    padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 600px;
+    width: 500px;
     
 }
 
@@ -75,6 +75,10 @@ button {
 
 button:hover {
     background-color: #4B0082;
+    width: 100px;
+}
+button {
+    width: 530px;
 }
 text {
     margin-bottom: 10%;
@@ -174,3 +178,4 @@ hr {
 .asterisco {
     color: red;  /* Deixa o asterisco vermelho */
 }
+
