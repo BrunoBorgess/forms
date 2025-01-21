@@ -27,7 +27,7 @@ form {
     padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 500px;
+    width: 400px;
     
 }
 
@@ -70,15 +70,12 @@ button {
     border-radius: 5px;
     cursor:pointer;
     margin-top: 10px;
-    
+    width: 430px;
 }
 
 button:hover {
     background-color: #4B0082;
     width: 100px;
-}
-button {
-    width: 530px;
 }
 text {
     margin-bottom: 10%;
