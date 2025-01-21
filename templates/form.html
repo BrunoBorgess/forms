@@ -60,79 +60,81 @@
         </div>
         <!-- Nome Completo -->
         <div class="form-box">
-            <label>Nome Completo:</label>
+            <label>Nome Completo:  <span class="asterisco">*</span></label>
             <text>Preencha seu Nome Completo sem Abreviar conforme está no RG</text>
             <input type="text" name="nome" required placeholder="Sua resposta">
+
         </div>
 
         <!-- Data de Nascimento -->
         <div class="form-box">
-            <label>Data de Nascimento:</label>
+            <label>Data de Nascimento:  <span class="asterisco">*</span></label>
             <text>Preencha sua Data de Nascimento</text>
-            <input type="date" name="nascimento" required>
+            <input type="date" name="nascimento" required>        
+            
         </div>
 
         <!-- CPF -->
         <div class="form-box">
-            <label>CPF:</label>
+            <label>CPF:  <span class="asterisco">*</span></label>
             <text>Preencha somente com números sem pontuação</text>
-            <input type="text" name="cpf" required placeholder="Sua resposta">
+            <input type="text" name="cpf" required placeholder="Sua resposta">       
         </div>
 
         <!-- RG -->
         <div class="form-box">
-            <label>RG:</label>
+            <label>RG:  <span class="asterisco">*</span></label>
             <text>Preencha seu RG com Orgão Expedidor (Ex. SSP-PR / SEJUSP-PR) </text>
             <input type="text" name="rg" required placeholder="Sua resposta">
         </div>
 
         <!-- PIS -->
         <div class="form-box">
-            <label>PIS:</label>
+            <label>PIS:  <span class="asterisco">*</span></label>
             <text>Preencha somente o número de PIS, você encontra ele na carteira de trabalho ou no App Caixa Tem</text>
             <input type="text" name="pis" required placeholder="Sua resposta">
         </div>
 
         <!-- Endereço -->
         <div class="form-box">
-            <label>Endereço:</label>
+            <label>Endereço:  <span class="asterisco">*</span></label>
             <text>Preencha com Endereço Completo e Bairro (Rua, Av, TV, Praça...)</text>
             <input type="text" name="endereco" required placeholder="Sua resposta">
         </div>
 
         <!-- CEP -->
         <div class="form-box">
-            <label>CEP:</label>
+            <label>CEP:  <span class="asterisco">*</span></label>
             <input type="text" name="cep" required placeholder="Sua resposta">
         </div>
 
         <!-- Cidade -->
         <div class="form-box">
-            <label>Cidade:</label>
+            <label>Cidade:  <span class="asterisco">*</span></label>
             <input type="text" name="cidade" required placeholder="Sua resposta">
         </div>
 
         <!-- Estado -->
         <div class="form-box">
-            <label>Estado:</label>
+            <label>Estado:  <span class="asterisco">*</span></label>
             <input type="text" name="estado" required placeholder="Sua resposta">
         </div>
 
         <!-- Celular -->
         <div class="form-box">
-            <label>Celular:</label>
+            <label>Celular:  <span class="asterisco">*</span></label>
             <input type="text" name="celular" required placeholder="Sua resposta">
         </div>
 
         <!-- Email -->
         <div class="form-box">
-            <label>Email:</label>
-            <input type="email" name="email" required placeholder="Sua resposta">
+            <label>Email:  <span class="asterisco">*</span></label>
+            <input type="text" name="email" required placeholder="Sua resposta">
         </div>
 
         <!-- Estado Civil -->
         <div class="form-box">
-            <label>Estado Civil:</label>
+            <label>Estado Civil:  <span class="asterisco">*</span></label>
             <div>
                 <class = input type="radio" name="estado_civil" value="Solteiro(a)" required> Solteiro(a)<br>
                 <input type="radio" name="estado_civil" value="Solteiro(a)"> Solteiro(a)<br>
@@ -145,7 +147,7 @@
 
         <!-- Raça/Cor -->
         <div class="form-box">
-            <label>Raça/Cor:</label>
+            <label>Raça/Cor:  <span class="asterisco">*</span></label>
             <text>Preencha de Acordo com a Certidão de Nascimento</text>
             <div>
                 <input type="radio" name="raca_cor" value="Branca" required> Branca<br>
@@ -158,7 +160,7 @@
 
         <!-- Uniforme Camisa Social -->
         <div class="form-box">
-            <label>Uniforme Camisa Social:</label>
+            <label>Uniforme Camisa Social:  <span class="asterisco">*</span></label>
             <div>
                 <input type="radio" name="camisa_social" value="PP" required> PP<br>
                 <input type="radio" name="camisa_social" value="P"> P<br>
@@ -172,7 +174,7 @@
 
         <!-- Uniforme Polo -->
         <div class="form-box">
-            <label>Uniforme Polo:</label>
+            <label>Uniforme Polo:  <span class="asterisco">*</span></label>
             <div>
                 <input type="radio" name="camisa_polo" value="PP" required> PP<br>
                 <input type="radio" name="camisa_polo" value="P"> P<br>
@@ -185,7 +187,7 @@
             </div>
         </div>
         <div class="form-box">
-            <label for="cnh">Foto da CNH ou RG:</label>
+            <label for="cnh">Foto da CNH ou RG:  <span class="asterisco">*</span></label>
             <text>Foto ou PDF(Obrigatório frente e verso do documento.)</text>
             <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" capture="camera" required>
         </div>
@@ -193,12 +195,22 @@
 
         <!-- Primeiro Emprego -->
         <div class="form-box">
-            <label>Primeiro Emprego?</label>
+            <label>Primeiro Emprego? <span class="asterisco">*</span></label>
             <div>
                 <input type="radio" name="primeiro_emprego" value="Sim" required> Sim<br>
                 <input type="radio" name="primeiro_emprego" value="Não"> Não
             </div>
         </div>
+
+        <div class="form-box">
+            <label>Irá utilizar vale tansporte?  <span class="asterisco">*</span></label>
+            <div>
+                <input type="radio" name="vale_transporte" value="Sim" required> Sim<br>
+                <input type="radio" name="vale_transporte" value="Não"> Não
+            </div>
+        </div>
+
+
 
         <!-- Botões -->
         <button type="submit">Enviar</button>

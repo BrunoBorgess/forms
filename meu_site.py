@@ -44,6 +44,7 @@ def form():
         camisa_social = request.form.get("camisa_social")
         camisa_polo = request.form.get("camisa_polo")
         primeiro_emprego = request.form.get("primeiro_emprego")
+        vale_transporte = request.form.get("vale_transporte")
         
         # Salvar a foto da CNH
         cnh_file = request.files["cnh"]
@@ -57,7 +58,7 @@ def form():
             send_email(
                 nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado, 
                 celular, email, estado_civil, raca_cor, camisa_social, 
-                camisa_polo, primeiro_emprego, cnh_path
+                camisa_polo, primeiro_emprego, vale_transporte, cnh_path
             )
             flash("Formulário enviado com sucesso!", "success")
         except Exception as e:
@@ -71,7 +72,7 @@ def form():
 
 def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
             celular, email, estado_civil, raca_cor, camisa_social,
-            camisa_polo, primeiro_emprego, cnh_path):
+            camisa_polo, primeiro_emprego, vale_transporte, cnh_path):
     sender_email = "lucasford677@gmail.com"  # E-mail do remetente
     sender_password = "wess hvyi nxzc pvgh"  # Senha do remetente ou senha de app
     receiver_email = "lucasb.empreendimentos@gmail.com"  # E-mail de destino
@@ -99,6 +100,7 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
     Uniforme Camisa Social: {camisa_social}
     Uniforme Polo: {camisa_polo}
     Primeiro Emprego: {primeiro_emprego}
+    Vale transporte: {vale_transporte}
     """
 
     msg.attach(MIMEText(body, 'plain'))

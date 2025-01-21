@@ -23,10 +23,11 @@ form {
     display: inline;
     background-color: #ffffff;
     border: 1px solid #ccc;
-    border-radius: 15px;
+    border-radius: 6px;
     padding: 20px;
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 600px;
     
 }
 
@@ -95,6 +96,27 @@ input[type="file"] {
     cursor: pointer;
     width: 95%;
 }
+input[type="text"] {
+    border: none; /* Remove as bordas padrão */
+    border-bottom: 2px solid #ccc; /* Linha cinza visível inicialmente */
+    outline: none; /* Remove o contorno do input */
+    padding: 10px 0; /* Ajusta o espaçamento para que fique apenas o foco na linha inferior */
+    font-size: 16px;
+    width: 100%; /* Para que o input ocupe toda a largura do container */
+    transition: border-color 0.3s ease, border-width 0.3s ease; /* Transição suave para a borda */
+
+}
+
+input:focus {
+    border-bottom: 2px solid #800080; /* Linha roxa que aparece ao focar */
+    border-width: 2px; /* Define a largura da borda */
+}
+
+input::placeholder {
+    color: #aaa; /* Define a cor do placeholder */
+}
+
+
 
 /* Estilo adicional para o rótulo */
 label {
@@ -147,4 +169,8 @@ hr {
 .text-button:hover {
     color: #0056b3; /* Cor do texto ao passar o mouse */
     text-decoration: underline; /* Sublinha quando o mouse passa por cima */
+}
+
+.asterisco {
+    color: red;  /* Deixa o asterisco vermelho */
 }
