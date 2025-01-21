@@ -12,9 +12,10 @@ body {
 /* Formulário */
 form {
     max-width: 600px;
-    margin: 0 auto;
+    margin: auto;
     display: flex;
     flex-direction: column;
+    padding: 20px; 
     
 }
 
@@ -24,10 +25,12 @@ form {
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 6px;
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 400px;
+    margin: auto;
+    margin-top: 18px;
     
 }
 
@@ -62,6 +65,7 @@ label {
 }
 
 /* Botões */
+/* Botões */
 button {
     padding: 10px;
     background-color: #800080;
@@ -70,7 +74,12 @@ button {
     border-radius: 5px;
     cursor:pointer;
     margin-top: 10px;
-    width: 430px;
+    margin: auto;
+    width: 440px;
+}
+button + button {
+    margin-top: 15px; /* Adiciona mais espaço entre os botões */
+
 }
 
 button:hover {
