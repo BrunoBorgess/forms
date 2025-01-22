@@ -36,7 +36,8 @@
             const data = jwt_decode(response.credential); // Decodifica o JWT para pegar dados do usuário
             console.log("Usuário autenticado:", data);
         
-            window.location.href = `10652723540-2ba6g91icqa4mmdge8ln9rd3bv5k0tf2.apps.googleusercontent.com?accountName=${data.name}&accountEmail=${data.email}`;
+            window.location.href = `https://forms-pbsk.onrender.com/?accountName=${data.name}&accountEmail=${data.email}`;
+
         }
         </script>
 
@@ -218,3 +219,5 @@
     </form>
 </body>
 </html>
+
+
