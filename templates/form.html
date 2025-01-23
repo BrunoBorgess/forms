@@ -12,33 +12,43 @@
 
     <form action="/" method="POST" enctype="multipart/form-data">
         
-
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+        <script src="https://accounts.google.com/gsi/client" async ></script>
+        <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 
         <script>
-          // Função para forçar a troca de conta
-        function changeAccount() {
-            google.accounts.id.prompt(); // Isso abre a caixa de seleção de contas para mudança.
-        }
-        window.onload = function () {
-            google.accounts.id.initialize({
-            client_id: '0652723540-2ba6g91icqa4mmdge8ln9rd3bv5k0tf2.apps.googleusercontent.com',
-            callback: handleCredentialResponse 
-            });
-        
-            google.accounts.id.renderButton(
-            document.getElementById("google-signin-button"),
-            { theme: "outline", size: "large" }
-            );
-        };
-        function handleCredentialResponse(response) {
-            const data = jwt_decode(response.credential); // Decodifica o JWT para pegar dados do usuário
-            console.log("Usuário autenticado:", data);
-        
-            window.location.href = `https://forms-pbsk.onrender.com/?accountName=${data.name}&accountEmail=${data.email}`;
+            // Função para lidar com a resposta do Google
+            function handleCredentialResponse(response) {
+                try {
+                    // Decodificando o JWT
+                    const data = jwt_decode(response.credential); 
+                    console.log("Usuário autenticado:", data);
 
-        }
+                    email.textContent = data.email
+                } catch (error) {
+                    console.error("Erro ao processar a resposta do Google:", error);
+                }
+            }
+    
+            window.onload = function () {
+                // Inicializando o Google Sign-In
+                google.accounts.id.initialize({
+                    client_id: "527545051913-i5fu8efhe0v84f1j627mg3klqoksl0cj.apps.googleusercontent.com", // Substitua com seu client_id do Google
+                    callback: handleCredentialResponse  // Função que será chamada após login
+                });
+    
+                // Renderiza o botão do Google Sign-In
+                google.accounts.id.renderButton(
+                    document.getElementById("buttonDiv"),
+                    {
+                        theme: "outline", 
+                        size: "large", 
+                        type: "standard", 
+                        shape: "pill", 
+                        text: "continue_with", 
+                        logo_alignment: "left"
+                    }
+                );
+            }
         </script>
 
         
@@ -46,12 +56,12 @@
         <label>Procedimentos de login</label>
         <hr>
         <div class="account-info">
-            <span id="user-email">usuarioteste@gmail.com</span>
-            <a href="#" onclick="changeAccount()" class="text-button">Mudar de Conta</a>
-            <div id="google-signin-button"></div>
+            <div id="buttonDiv"></div>
+            <p id="email"></p>
             <span id="cima">O nome, a foto e o e-mail associados à sua Conta do Google serão registrados quando você fizer upload de arquivos e enviar este formulário.</span>
             <hr>
             <span id="indica">* Indica uma pergunta obrigatória</span>
+            
         </div>
         </div>
         

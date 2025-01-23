@@ -149,7 +149,9 @@ label {
 #cima {
     display: block; /* Faz com que o texto ocupe uma linha própria */
     margin-bottom: 20px;
-    font-size: small; /* Espaço abaixo da descrição */
+    font-size: smaller; /* Espaço abaixo da descrição */
+    margin-top: 20px;
+    font-style: oblique;
 }
 
 hr {
@@ -185,3 +187,8 @@ hr {
     color: red;  /* Deixa o asterisco vermelho */
 }
 
+#email {
+    color: #4B0082;
+    font-size: smaller;
+    font-style:oblique;
+}
