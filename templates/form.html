@@ -6,39 +6,14 @@
     <link rel="stylesheet" href="/static/css/styles.css">
     <title>Formulário de Cadastro</title>
     <meta name="google-site-verification" content="Youb92PhbExzqsaMZcMz_pov-4Qf9R0Vsnn4M0k8F8M" />
-    <style>
-        video {
-            width: 100%;
-            height: auto;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .rectangle {
-            position: absolute;
-            top: 20%;
-            left: 10%;
-            width: 80%;
-            height: 40%;
-            border: 2px solid red;
-        }
-    </style>
 </head>
 
 <body>
 
     <form action="/" method="POST" enctype="multipart/form-data">
-
-        <script src="https://accounts.google.com/gsi/client" async></script>
+        
+        <script src="https://accounts.google.com/gsi/client" async ></script>
         <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.0.0-beta.10/dist/tesseract.min.js"></script>
 
         <script>
             // Função para lidar com a resposta do Google
@@ -47,19 +22,20 @@
                     // Decodificando o JWT
                     const data = jwt_decode(response.credential); 
                     console.log("Usuário autenticado:", data);
+
                     email.textContent = data.email
                 } catch (error) {
                     console.error("Erro ao processar a resposta do Google:", error);
                 }
             }
-
+    
             window.onload = function () {
                 // Inicializando o Google Sign-In
                 google.accounts.id.initialize({
                     client_id: "527545051913-i5fu8efhe0v84f1j627mg3klqoksl0cj.apps.googleusercontent.com", // Substitua com seu client_id do Google
                     callback: handleCredentialResponse  // Função que será chamada após login
                 });
-
+    
                 // Renderiza o botão do Google Sign-In
                 google.accounts.id.renderButton(
                     document.getElementById("buttonDiv"),
@@ -73,90 +49,32 @@
                     }
                 );
             }
-
-            // Função para capturar a foto da CNH e realizar o OCR
-            function captureImage() {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                // Exibir a imagem capturada no canvas
-                const image = canvas.toDataURL('image/png');
-                processOCR(image);
-            }
-
-            function processOCR(image) {
-                Tesseract.recognize(image, 'eng', { logger: (m) => console.log(m) })
-                    .then(({ data: { text } }) => {
-                        console.log("Texto extraído:", text);
-
-                        // Extração do nome e CPF
-                        const nome = extractName(text);
-                        const cpf = extractCPF(text);
-
-                        // Comparar com os dados do formulário
-                        const nomeFormulario = document.querySelector('input[name="nome"]').value;
-                        const cpfFormulario = document.querySelector('input[name="cpf"]').value;
-
-                        if (nome === nomeFormulario && cpf === cpfFormulario) {
-                            alert("Dados verificados com sucesso!");
-                            // Permitir o envio do formulário
-                        } else {
-                            alert("Dados não coincidem! Tente novamente.");
-                        }
-                    });
-            }
-
-            // Função para extrair nome
-            function extractName(text) {
-                const nameRegex = /\b([A-Za-z]+\s[A-Za-z]+)\b/; // Regex para nome
-                const result = text.match(nameRegex);
-                return result ? result[0] : '';
-            }
-
-            // Função para extrair CPF
-            function extractCPF(text) {
-                const cpfRegex = /\d{3}\.\d{3}\.\d{3}-\d{2}/; // Regex para CPF
-                const result = text.match(cpfRegex);
-                return result ? result[0] : '';
-            }
-
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Iniciar a câmera
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    video.srcObject = stream;
-                })
-                .catch((err) => {
-                    console.error("Erro ao acessar a câmera:", err);
-                });
-
         </script>
 
+        
         <div class="form-box">
-            <label>Procedimentos de login</label>
+        <label>Procedimentos de login</label>
+        <hr>
+        <div class="account-info">
+            <div id="buttonDiv"></div>
+            <p id="email"></p>
+            <span id="cima">O nome, a foto e o e-mail associados à sua Conta do Google serão registrados quando você fizer upload de arquivos e enviar este formulário.</span>
             <hr>
-            <div class="account-info">
-                <div id="buttonDiv"></div>
-                <p id="email"></p>
-                <span id="cima">O nome, a foto e o e-mail associados à sua Conta do Google serão registrados quando você fizer upload de arquivos e enviar este formulário.</span>
-                <hr>
-                <span id="indica">* Indica uma pergunta obrigatória</span>
-            </div>
+            <span id="indica">* Indica uma pergunta obrigatória</span>
+            
         </div>
+        </div>
+        
 
         <div class="form-box">
             <img src="/static/css/image/logo.png" alt="Logo da Empresa" class="logo">
         </div>
-
         <!-- Nome Completo -->
         <div class="form-box">
             <label>Nome Completo:  <span class="asterisco">*</span></label>
             <text>Preencha seu Nome Completo sem Abreviar conforme está no RG</text>
             <input type="text" name="nome" required placeholder="Sua resposta">
+
         </div>
 
         <!-- Data de Nascimento -->
@@ -164,6 +82,7 @@
             <label>Data de Nascimento:  <span class="asterisco">*</span></label>
             <text>Preencha sua Data de Nascimento</text>
             <input type="date" name="nascimento" required>        
+            
         </div>
 
         <!-- CPF -->
@@ -228,7 +147,8 @@
         <div class="form-box">
             <label>Estado Civil:  <span class="asterisco">*</span></label>
             <div>
-                <input type="radio" name="estado_civil" value="Solteiro(a)" required> Solteiro(a)<br>
+                <class = input type="radio" name="estado_civil" value="Solteiro(a)" required> Solteiro(a)<br>
+                <input type="radio" name="estado_civil" value="Solteiro(a)"> Solteiro(a)<br>
                 <input type="radio" name="estado_civil" value="Casado(a)"> Casado(a)<br>
                 <input type="radio" name="estado_civil" value="Viúvo(a)"> Viúvo(a)<br>
                 <input type="radio" name="estado_civil" value="Divorciado(a)"> Divorciado(a)<br>
@@ -277,13 +197,12 @@
                 <input type="radio" name="camisa_polo" value="GG4"> GG4
             </div>
         </div>
-
-        <!-- Foto da CNH -->
         <div class="form-box">
             <label for="cnh">Foto da CNH ou RG:  <span class="asterisco">*</span></label>
             <text>Foto ou PDF(Obrigatório frente e verso do documento.)</text>
-            <button type="button" id="captureButton">Capturar Foto da CNH</button>
+            <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" capture="camera" required>
         </div>
+        
 
         <!-- Primeiro Emprego -->
         <div class="form-box">
@@ -295,18 +214,20 @@
         </div>
 
         <div class="form-box">
-            <label>Irá utilizar vale transporte?  <span class="asterisco">*</span></label>
+            <label>Irá utilizar vale tansporte?  <span class="asterisco">*</span></label>
             <div>
                 <input type="radio" name="vale_transporte" value="Sim" required> Sim<br>
                 <input type="radio" name="vale_transporte" value="Não"> Não
             </div>
         </div>
-
         <!-- Botões -->
-        <button type="submit" class="submit-btn">Enviar</button>
-        <button type
 
-
+            <button type="submit" class="submit-btn">Enviar</button>
+            <button type="reset" class="reset-btn">Limpar Formulário</button>
+        
+        
     </form>
 </body>
 </html>
+
+
