@@ -129,6 +129,7 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
         os.remove(cnh_path)
 
 
+
 if __name__ == "__main__":
     app.run(debug=True)
 
