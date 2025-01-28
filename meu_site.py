@@ -19,14 +19,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Ajuste para o caminho correto no servidor
 
 # Caminho para o executável do Tesseract
-tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+#tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Caminho para a pasta tessdata
-tessdata_prefix = r"C:\Program Files\Tesseract-OCR\tessdata"
+#tessdata_prefix = r"C:\Program Files\Tesseract-OCR\tessdata"
 
 # Configura as variáveis de ambiente corretamente
-os.environ['TESSDATA_PREFIX'] = tessdata_prefix
-pytesseract.pytesseract.tesseract_cmd = tesseract_path
+os.environ['TESSDATA_PREFIX'] = pytesseract.pytesseract.tesseract_cmd
+pytesseract.pytesseract.tesseract_cmd = pytesseract.pytesseract.tesseract_cmd
 
 # Funções para processar o PDF e extrair CPF e nome
 def crop_cpf_region(image):
