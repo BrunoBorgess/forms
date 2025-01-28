@@ -17,13 +17,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-tesseract_path = "/usr/bin/tesseract"  # Caminho típico no Render
+# Defina o caminho do Tesseract
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'  # Caminho usual no Render
 
-if not os.path.exists(tesseract_path):
-    raise Exception(f"Tesseract não encontrado no caminho: {tesseract_path}")
 
-pytesseract.pytesseract.tesseract_cmd = tesseract_path
-pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Ajuste para o caminho correto no servidor
+# Ajuste para o caminho correto no servidor
 
 # Caminho para o executável do Tesseract
 #tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
