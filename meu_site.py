@@ -16,6 +16,8 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Ajuste para o caminho correto no servidor
+
 # Caminho para o executável do Tesseract
 tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
