@@ -18,13 +18,13 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 # Defina o caminho do Tesseract
-pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'  # Caminho usual no Render
+#pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'  # Caminho usual no Render
 
 
 # Ajuste para o caminho correto no servidor
 
 # Caminho para o executável do Tesseract
-#tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Caminho para a pasta tessdata
 #tessdata_prefix = r"C:\Program Files\Tesseract-OCR\tessdata"

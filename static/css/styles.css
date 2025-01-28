@@ -2,12 +2,8 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color:#f0ebf8;
+    background-color: #f0ebf8;
 }
-
-
-
-
 
 /* Formulário */
 form {
@@ -17,7 +13,6 @@ form {
     flex-direction: column;
     padding: 30px; 
     align-items: center;
-    
 }
 
 /* Boxes arredondados */
@@ -26,45 +21,42 @@ form {
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 6px;
-    padding: 10px;
+    padding: 20px; /* Ajustado para mais espaço dentro */
     margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 100%; /* Ajuste dinâmico em telas maiores */
+    max-width: 600px;
     margin-top: 18px;
-    
 }
 
-
+/* Logos */
 .form-box .logo {
-    max-width: 100%;     
-    height: auto;      
+    max-width: 100%;
+    height: auto;
 }
 
-input{
+/* Inputs */
+input {
     border-radius: 5px;
     width: 95%;
     padding: 1%;
     margin-top: 5%;
 }
 
-
-input[type="radio"]{
+/* Radios */
+input[type="radio"] {
     border-radius: 5px;
     width: auto;
     padding: 1%;
     margin-top: 5%;
 }
 
-
 /* Labels */
 label {
     font-weight: bold;
     margin-bottom: 5px;
-    display:flex ;
-    border-radius: 5px;
+    display: block;
 }
 
-/* Botões */
 /* Botões */
 button {
     padding: 10px;
@@ -72,29 +64,24 @@ button {
     color: white;
     border: none;
     border-radius: 5px;
-    cursor:pointer;
+    cursor: pointer;
     margin-top: 20px;
-
     width: 420px;
 }
-button + button {
-    margin-top: 10px; /* Adiciona mais espaço entre os botões */
 
+button + button {
+    margin-top: 10px;
 }
 
 button:hover {
     background-color: #4B0082;
     width: 100px;
 }
+
+/* Ajuste de texto */
 text {
-    margin-bottom: 10%;
-    font-weight:normal;
-
-}
-
-.form-box-img img {
-    width: 100%; /* A imagem ocupará 100% da largura do container */
-    height: auto; /* A altura será ajustada automaticamente para manter a proporção */
+    font-size: 14px; /* Tamanho de fonte menor */
+    color: #777;     /* Cor mais clara */
 }
 
 /* Estilo para o campo de upload */
@@ -106,27 +93,26 @@ input[type="file"] {
     cursor: pointer;
     width: 95%;
 }
-input[type="text"] {
-    border: none; /* Remove as bordas padrão */
-    border-bottom: 2px solid #ccc; /* Linha cinza visível inicialmente */
-    outline: none; /* Remove o contorno do input */
-    padding: 10px 0; /* Ajusta o espaçamento para que fique apenas o foco na linha inferior */
-    font-size: 16px;
-    width: 100%; /* Para que o input ocupe toda a largura do container */
-    transition: border-color 0.3s ease, border-width 0.3s ease; /* Transição suave para a borda */
 
+/* Estilo para o campo de texto */
+input[type="text"] {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    outline: none;
+    padding: 10px 0;
+    font-size: 16px;
+    width: 100%;
+    transition: border-color 0.3s ease, border-width 0.3s ease;
 }
 
 input:focus {
-    border-bottom: 2px solid #800080; /* Linha roxa que aparece ao focar */
-    border-width: 2px; /* Define a largura da borda */
+    border-bottom: 2px solid #800080;
+    border-width: 2px;
 }
 
 input::placeholder {
-    color: #aaa; /* Define a cor do placeholder */
+    color: #aaa;
 }
-
-
 
 /* Estilo adicional para o rótulo */
 label {
@@ -135,10 +121,10 @@ label {
     display: block;
 }
 
+/* Seção de informações da conta */
 .account-info {
     margin-bottom: 30px;
     margin-top: 30px;
-
 }
 
 #user-email {
@@ -146,50 +132,53 @@ label {
     margin-bottom: 10px;
 }
 
+/* Texto adicional */
 #cima {
-    display: block; /* Faz com que o texto ocupe uma linha própria */
+    display: block;
     margin-bottom: 20px;
-    font-size: smaller; /* Espaço abaixo da descrição */
+    font-size: smaller;
     margin-top: 20px;
     font-style: oblique;
-;
 }
 
 hr {
-    margin: 10px 0; /* Espaçamento acima e abaixo da linha horizontal */
+    margin: 10px 0;
     display: block;
 }
 
 #indica {
-    display: block; /* Faz com que o texto ocupe uma linha própria */
+    display: block;
     margin-top: 20px;
-    color: red /* Espaço acima do texto de indicação */
-    
-}
-#google-signin-button {
-    margin-top: 30;
-    margin-bottom: 30;
+    color: red;
 }
 
+/* Botão de login com Google */
+#google-signin-button {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* Estilo para o texto do botão */
 .text-button {
-    color: #007bff; /* Cor do texto */
-    text-decoration: none; /* Remover sublinhado */
-    font-size: 16px; /* Tamanho do texto */
-    font-weight: bold; /* Texto em negrito */
-    cursor: pointer; /* Mostrar cursor de ponteiro */
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .text-button:hover {
-    color: #0056b3; /* Cor do texto ao passar o mouse */
-    text-decoration: underline; /* Sublinha quando o mouse passa por cima */
+    color: #0056b3;
+    text-decoration: underline;
 }
 
+/* Asterisco vermelho */
 .asterisco {
-    color: red;  /* Deixa o asterisco vermelho */
+    color: red;
 }
 
 #email {
     color: #4B0082;
     font-size: smaller;
-    font-style:oblique;
+    font-style: oblique;
 }
