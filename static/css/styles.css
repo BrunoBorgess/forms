@@ -57,6 +57,13 @@ label {
     display: block;
 }
 
+/* Contêiner de botões - flex */
+.button-container {
+    display: flex;             /* Alinha os itens (botões) lado a lado */
+    justify-content: space-between; /* Garante que os botões fiquem afastados */
+    width: 100%;               /* Garantir que ocupe toda a largura */
+}
+
 /* Botões */
 button {
     padding: 10px;
@@ -65,17 +72,16 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
-    width: 420px;
+    width: 48%;                /* Largura ajustada para que fiquem lado a lado */
+    box-sizing: border-box;    /* Inclui o padding dentro da largura */
 }
 
 button + button {
-    margin-top: 10px;
+    margin-left: 4%;           /* Espaço entre os botões */
 }
 
 button:hover {
     background-color: #4B0082;
-    width: 100px;
 }
 
 /* Ajuste de texto */
@@ -182,3 +188,53 @@ hr {
     font-size: smaller;
     font-style: oblique;
 }
+/* Container para os botões, alinhando-os nas extremidades */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Botão Enviar */
+.btn-enviar {
+    padding: 8px 16px;
+    background-color: #800080;  /* Cor roxa de fundo */
+    color: white;  /* Texto branco */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 48%;  /* Ocupa metade da largura do container */
+    font-size: 14px;  /* Fonte menor */
+}
+
+.btn-enviar:hover {
+    background-color: #4B0082; /* Cor mais escura no hover */
+}
+
+/* Botão Limpar Formulário */
+.btn-limpar {
+    padding: 10px 20px;
+    background-color: transparent; /* Sem fundo */
+    color: #800080; /* Texto roxo */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1; /* Ocupa metade do espaço */
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Suaviza as transições */
+}
+
+/* Quando o mouse está sobre o botão */
+.btn-limpar:hover {
+    background-color: rgba(128, 0, 128, 0.1); /* Fundo roxo quase transparente */
+    color: #800080; /* Texto branco */
+}
+
+/* Quando o botão é clicado */
+.btn-limpar:active {
+    background-color: rgba(128, 0, 128, 0.2); /* Fundo ligeiramente mais opaco */
+    color: black; /* Texto permanece branco */
+}
+
