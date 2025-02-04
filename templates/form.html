@@ -198,12 +198,75 @@
                 <label for="cnh">Foto da CNH ou RG:  <span class="asterisco">*</span></label>
                 <text>Foto ou PDF(Obrigatório frente e verso do documento.)</text>
                 <br></br>
-                <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" capture="camera" required onchange="updateFileName('cnh')">
+                <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf"  required onchange="updateFileName('cnh')">
                 <label for="cnh" class="custom-file-upload">
                     <i class="fa-upload"></i> Escolher Arquivo
                 </label>
                 <div class="file-name" id="file-name-cnh"></div>
+                <!-- Botão para abrir a câmera -->
+                <button type="button" onclick="abrirCamera()">📷 Capturar com a Câmera</button>
+
+                <!-- Área da câmera -->
+                <div id="cameraContainer" style="display: none; position: relative;">
+                    <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
+                    <div class="overlay"></div>
+                    <button type="button" onclick="capturarFoto()">📸 Capturar</button>
+                </div>
             </div>
+            <script>
+                function abrirCamera() {
+                    const video = document.getElementById('video');
+                    const cameraContainer = document.getElementById('cameraContainer');
+            
+                    // Exibir a área da câmera
+                    cameraContainer.style.display = 'block';
+            
+                    // Acessar a câmera
+                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                        .then(stream => {
+                            video.srcObject = stream;
+                        })
+                        .catch(err => {
+                            console.error("Erro ao acessar a câmera:", err);
+                            alert("Erro ao acessar a câmera!");
+                        });
+                }
+            
+                function capturarFoto() {
+                    const video = document.getElementById('video');
+                    const canvas = document.getElementById('canvas');
+                    const fotoCapturada = document.getElementById('fotoCapturada');
+            
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+            
+                    // Capturar imagem
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+                    // Converter em imagem e exibir
+                    fotoCapturada.src = canvas.toDataURL('image/png');
+                    fotoCapturada.style.display = 'block';
+            
+                    // Ocultar a câmera após a captura
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    document.getElementById('cameraContainer').style.display = 'none';
+                }
+            </script>
+            
+            <style>
+                .overlay {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 300px;
+                    height: 180px;
+                    border: 3px solid red;
+                    transform: translate(-50%, -50%);
+                    background: rgba(255, 0, 0, 0.2);
+                }
+            </style>
+
 
             <!-- Primeiro Emprego -->
             <div class="form-box">
@@ -230,7 +293,7 @@
             <text>Nunca envie senhas pelo Formulários Google.</text>
             <div class="center-text">
                 <text>Este formulário foi criado em THE BEST MULTISERVICOS E ADMINISTRACAO LTDA.
-                    Does this form look suspicious? Relatório</text>
+                    Does this form look suspicious? </text>
             </div>
         </div>
         
@@ -283,7 +346,7 @@
                 <div class="file-name" id="file-name-arquivo3"></div>
             </div>
 
-     
+
             
             <div class="form-box">
                 <label>Carteira de Habilitação (CNH) Se Tiver  <span class="asterisco">*</span></label>
