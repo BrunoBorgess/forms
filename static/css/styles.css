@@ -212,6 +212,17 @@ hr {
     width: 48%;  /* Ocupa metade da largura do container */
     font-size: 14px;  /* Fonte menor */
 }
+.btn-captura {
+    padding: 8px 16px;
+    background-color: #800080; /* Sem fundo */  
+    color: white;;  /* Texto branco */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 20%;  /* Ocupa metade da largura do container */
+    font-size: 14 px;  /* Fonte menor */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 .btn-enviar:hover {
     background-color: #4B0082; /* Cor mais escura no hover */
