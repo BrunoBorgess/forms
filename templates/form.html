@@ -672,9 +672,27 @@
                 // Seleciona a div correspondente que exibe o nome do arquivo e limpa o texto
                 var fileNameDiv = document.getElementById("file-name-" + input.id);
                 if (fileNameDiv) {
-                    fileNameDiv.textContent = "";
+                    fileNameDiv.textContent = ""; // Limpa o nome do arquivo
                 }
             });
+        
+            // Limpa a imagem da câmera e esconde a área da câmera
+            var cameraContainer = document.getElementById("cameraContainer");
+            var fotoCapturada = document.getElementById("fotoCapturada");
+            var canvas = document.getElementById("canvas");
+            
+            // Esconde a imagem capturada
+            fotoCapturada.style.display = "none";
+            
+            // Limpa a imagem capturada no canvas (se houver)
+            var ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);  // Limpa o canvas
+            
+            // Limpa o input oculto da imagem base64
+            document.getElementById("imagemBase64").value = "";
+        
+            // Mostra novamente a área da câmera
+            cameraContainer.style.display = "block";
         }
         
 
