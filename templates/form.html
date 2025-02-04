@@ -6,15 +6,15 @@
     <link rel="stylesheet" href="/static/css/styles.css">
     <title>Formulário de Cadastro</title>
     <meta name="google-site-verification" content="Youb92PhbExzqsaMZcMz_pov-4Qf9R0Vsnn4M0k8F8M" />
-</head>
+    <script src="https://accounts.google.com/gsi/client" async ></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
+</head>
 <body>
 
     <form action="/" method="POST" enctype="multipart/form-data">
         
-        <script src="https://accounts.google.com/gsi/client" async ></script>
-        <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-
         <script>
             // Função para lidar com a resposta do Google
             function handleCredentialResponse(response) {
@@ -28,7 +28,7 @@
                     console.error("Erro ao processar a resposta do Google:", error);
                 }
             }
-    
+
             window.onload = function () {
                 // Inicializando o Google Sign-In
                 google.accounts.id.initialize({
@@ -50,190 +50,558 @@
                 );
             }
         </script>
+        <div id="step1" style="display:block;">
+            <!-- Step 1 - Informações Pessoais -->
+            <div class="form-box">
+                <label>Procedimentos de login</label>
+                <hr>
+                <div class="account-info">
+                    <div id="buttonDiv"></div>
+                    <p id="email"></p>
+                    <span id="cima">O nome, a foto e o e-mail associados à sua Conta do Google serão registrados quando você fizer upload de arquivos e enviar este formulário.</span>
+                    <hr>
+                    <span id="indica">* Indica uma pergunta obrigatória</span>
+                </div>
+            </div>
 
+            <div class="form-box">
+                <img src="/static/css/image/logo.png" alt="Logo da Empresa" class="logo">
+            </div>
+
+            <!-- Nome Completo -->
+            <div class="form-box">
+                <label>Nome Completo:  <span class="asterisco">*</span></label>
+                <text>Preencha seu Nome Completo sem Abreviar conforme está no RG</text>
+                <input type="text" name="nome" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Data de Nascimento -->
+            <div class="form-box">
+                <label>Data de Nascimento:  <span class="asterisco">*</span></label>
+                <text>Preencha sua Data de Nascimento</text>
+                <input type="date" name="nascimento" required>        
+            </div>
+
+            <!-- CPF -->
+            <div class="form-box">
+                <label>CPF:  <span class="asterisco">*</span></label>
+                <text>Preencha somente com números sem pontuação</text>
+                <input type="text" name="cpf" required placeholder="Sua resposta">       
+            </div>
+
+            <!-- RG -->
+            <div class="form-box">
+                <label>RG:  <span class="asterisco">*</span></label>
+                <text>Preencha seu RG com Orgão Expedidor (Ex. SSP-PR / SEJUSP-PR)</text>
+                <input type="text" name="rg" required placeholder="Sua resposta">
+            </div>
+
+            <!-- PIS -->
+            <div class="form-box">
+                <label>PIS:  <span class="asterisco">*</span></label>
+                <text>Preencha somente o número de PIS, você encontra ele na carteira de trabalho ou no App Caixa Tem</text>
+                <input type="text" name="pis" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Endereço -->
+            <div class="form-box">
+                <label>Endereço:  <span class="asterisco">*</span></label>
+                <text>Preencha com Endereço Completo e Bairro (Rua, Av, TV, Praça...)</text>
+                <input type="text" name="endereco" required placeholder="Sua resposta">
+            </div>
+
+            <!-- CEP -->
+            <div class="form-box">
+                <label>CEP:  <span class="asterisco">*</span></label>
+                <input type="text" name="cep" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Cidade -->
+            <div class="form-box">
+                <label>Cidade:  <span class="asterisco">*</span></label>
+                <input type="text" name="cidade" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Estado -->
+            <div class="form-box">
+                <label>Estado:  <span class="asterisco">*</span></label>
+                <input type="text" name="estado" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Celular -->
+            <div class="form-box">
+                <label>Celular:  <span class="asterisco">*</span></label>
+                <input type="text" name="celular" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Email -->
+            <div class="form-box">
+                <label>Email:  <span class="asterisco">*</span></label>
+                <input type="text" name="email" required placeholder="Sua resposta">
+            </div>
+
+            <!-- Estado Civil -->
+            <div class="form-box">
+                <label>Estado Civil:  <span class="asterisco">*</span></label>
+                <div>
+                    <input type="radio" name="estado_civil" value="Solteiro(a)" required> Solteiro(a)<br>
+                    <input type="radio" name="estado_civil" value="Casado(a)"> Casado(a)<br>
+                    <input type="radio" name="estado_civil" value="Viúvo(a)"> Viúvo(a)<br>
+                    <input type="radio" name="estado_civil" value="Divorciado(a)"> Divorciado(a)<br>
+                    <input type="radio" name="estado_civil" value="União Estável"> União Estável
+                </div>
+            </div>
+
+            <!-- Raça/Cor -->
+            <div class="form-box">
+                <label>Raça/Cor:  <span class="asterisco">*</span></label>
+                <text>Preencha de Acordo com a Certidão de Nascimento</text>
+                <div>
+                    <input type="radio" name="raca_cor" value="Branca" required> Branca<br>
+                    <input type="radio" name="raca_cor" value="Preta"> Preta<br>
+                    <input type="radio" name="raca_cor" value="Parda"> Parda<br>
+                    <input type="radio" name="raca_cor" value="Amarela"> Amarela<br>
+                    <input type="radio" name="raca_cor" value="Indígena"> Indígena
+                </div>
+            </div>
+
+            <!-- Uniforme Camisa Social -->
+            <div class="form-box">
+                <label>Uniforme Camisa Social:  <span class="asterisco">*</span></label>
+                <div>
+                    <input type="radio" name="camisa_social" value="PP" required> PP<br>
+                    <input type="radio" name="camisa_social" value="P"> P<br>
+                    <input type="radio" name="camisa_social" value="M"> M<br>
+                    <input type="radio" name="camisa_social" value="G"> G<br>
+                    <input type="radio" name="camisa_social" value="GG1"> GG1<br>
+                    <input type="radio" name="camisa_social" value="GG2"> GG2<br>
+                    <input type="radio" name="camisa_social" value="GG3"> GG3
+                </div>
+            </div>
+
+            <!-- Uniforme Polo -->
+            <div class="form-box">
+                <label>Uniforme Polo:  <span class="asterisco">*</span></label>
+                <div>
+                    <input type="radio" name="camisa_polo" value="PP" required> PP<br>
+                    <input type="radio" name="camisa_polo" value="P"> P<br>
+                    <input type="radio" name="camisa_polo" value="M"> M<br>
+                    <input type="radio" name="camisa_polo" value="G"> G<br>
+                    <input type="radio" name="camisa_polo" value="GG1"> GG1<br>
+                    <input type="radio" name="camisa_polo" value="GG2"> GG2<br>
+                    <input type="radio" name="camisa_polo" value="GG3"> GG3<br>
+                    <input type="radio" name="camisa_polo" value="GG4"> GG4
+                </div>
+            </div>
+
+            <div class="form-box">
+                <label for="cnh">Foto da CNH ou RG:  <span class="asterisco">*</span></label>
+                <text>Foto ou PDF(Obrigatório frente e verso do documento.)</text>
+                <br></br>
+                <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" capture="camera" required onchange="updateFileName('cnh')">
+                <label for="cnh" class="custom-file-upload">
+                    <i class="fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-cnh"></div>
+            </div>
+
+            <!-- Primeiro Emprego -->
+            <div class="form-box">
+                <label>Primeiro Emprego? <span class="asterisco">*</span></label>
+                <div>
+                    <input type="radio" name="primeiro_emprego" value="Sim" required> Sim<br>
+                    <input type="radio" name="primeiro_emprego" value="Não"> Não
+                </div>
+            </div>
+            <div class="form-box">
+                <label>Irá utilizar vale tansporte?  <span class="asterisco">*</span></label>
+                <div>
+                    <input type="radio" name="vale_transporte" value="Sim" required> Sim<br>
+                    <input type="radio" name="vale_transporte" value="Não"> Não
+                </div>
+            </div>
+            <!-- Botão para avançar para a Step 2 -->
+            <div class="button-container">
+                <button type="button" onclick="showStep2()">Proximo</button>
+                <button class="btn-limpar" type="reset" onclick="limparArquivos()">Limpar</button>
+                
+            </div>
+            <br><br>
+            <text>Nunca envie senhas pelo Formulários Google.</text>
+            <div class="center-text">
+                <text>Este formulário foi criado em THE BEST MULTISERVICOS E ADMINISTRACAO LTDA.
+                    Does this form look suspicious? Relatório</text>
+            </div>
+        </div>
         
-        <div class="form-box">
-        <label>Procedimentos de login</label>
-        <hr>
-        <div class="account-info">
-            <div id="buttonDiv"></div>
-            <p id="email"></p>
-            <span id="cima">O nome, a foto e o e-mail associados à sua Conta do Google serão registrados quando você fizer upload de arquivos e enviar este formulário.</span>
-            <hr>
-            <span id="indica">* Indica uma pergunta obrigatória</span>
+
+
+
+
+        <!-- Step 2 - Upload de Arquivos -->
+        <div id="step2" style="display:none;">
+            <h2>Step 2: Upload de Arquivos</h2>
+
+            <div class="form-box">
+                <label>Carteira de Identidade  <span class="asterisco">*</span></label>
+                <text>Anexar Foto do Documento Aberto ou Frente e Verso se for RG modelo antigo (Pdf ou Foto)</text>
+                <img src="/static/css/image/docs-rg.png" alt="Logo da Empresa" class="logo">
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo1" name="arquivo1" required onchange="updateFileName('arquivo1')">
+                <label for="arquivo1" class="custom-file-upload">
+                    <i class="fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo1"></div>
+            </div>
+
+
+            <div class="form-box">
+                <label>CPF<span class="asterisco">*</span></label>
+                <text>Tirar foto da frente do Documento onde estão as informações de número e nome (Pdf ou Foto)</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de 1 arquivo aceito: PDF, document ou image. O tamanho máximo é de 10 MB.</text>
+                <br><br>
+                <input type="file" id="arquivo2" name="arquivo2" onchange="updateFileName('arquivo2')">
+                <label for="arquivo2" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo2"></div>
+            </div>
+
+
+            <div class="form-box">
+                <label>Título de Eleitor  <span class="asterisco">*</span></label>
+                <text>Tirar foto da frente e verso do Documento onde estão as informações de número e nome (Pdf ou Foto))</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de 1 arquivo aceito: PDF, document ou image. O tamanho máximo é de 10 MB.</text>
+                <br><br>
+                <input type="file" id="arquivo3" name="arquivo3" onchange="updateFileName('arquivo3')">
+                <label for="arquivo3" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo3"></div>
+            </div>
+
+     
             
-        </div>
-        </div>
-        
+            <div class="form-box">
+                <label>Carteira de Habilitação (CNH) Se Tiver  <span class="asterisco">*</span></label>
+                <text>Tirar foto da frente e verso do Documento onde estão as informações de número e nome (Pdf ou Foto))</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo4" name="arquivo4" onchange="updateFileName('arquivo4')">
+                <label for="arquivo4" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo4"></div>
+            </div>
 
-        <div class="form-box">
-            <img src="/static/css/image/logo.png" alt="Logo da Empresa" class="logo">
-        </div>
-        <!-- Nome Completo -->
-        <div class="form-box">
-            <label>Nome Completo:  <span class="asterisco">*</span></label>
-            <text>Preencha seu Nome Completo sem Abreviar conforme está no RG</text>
-            <input type="text" name="nome" required placeholder="Sua resposta">
+
+
+            <div class="form-box">
+                <label>Inscrição no PIS/PASEP<span class="asterisco">*</span></label>
+                <text>Tirar foto do cartão do PIS ou basta entrar no aplicativo Caixa Tem</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo5" name="arquivo5" onchange="updateFileName('arquivo5')">
+                <label for="arquivo5" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo5"></div>
+            </div>
+
+
+
+            <div class="form-box">
+                <label>Cartão do SUS  <span class="asterisco">*</span></label>
+                <img src="/static/css/image/sus.png" alt="Logo da Empresa" class="logo">
+                <text class="texto-menor">Faça upload de 1 arquivo aceito: PDF, document ou image. O tamanho máximo é de 10 MB.</text>
+                <br><br>
+                <input type="file" id="arquivo6" name="arquivo6" onchange="updateFileName('arquivo6')">
+                <label for="arquivo6" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo6"></div>
+            </div>
+
+
+
+            <div class="form-box">
+                <label>Certificado de Alistamento Militar<span class="asterisco">*</span></label>
+                <text>Exigido apenas para Homens entre 18 e 45 anos;</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de 1 arquivo aceito: PDF, document ou image. O tamanho máximo é de 10 MB.</text>
+                <br><br>
+                <input type="file" id="arquivo7" name="arquivo7" onchange="updateFileName('arquivo7')">
+                <label for="arquivo7" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo7"></div>
+            </div>
+
+
+
+            <div class="form-box">
+                <label>Certificado de Escolaridade<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo8" name="arquivo8" onchange="updateFileName('arquivo8')">
+                <label for="arquivo8" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo8"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Certidão de Antecedente Criminal Federal Atualizada<span class="asterisco">*</span></label>
+                <text>Emitido no site  <a href="https://servicos.pf.gov.br/epol-sinic-publico/" target="_blank" rel="noopener noreferrer">https://servicos.pf.gov.br/epol-sinic-publico/</a></text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo9" name="arquivo9" onchange="updateFileName('arquivo9')">
+                <label for="arquivo9" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo9"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Certidão de Antecedente Criminal Estadual Atualizada<span class="asterisco">*</span></label>
+                <text>Emitido no site  <a href="https://www.atestados.pr.gov.br/solicitante/validar" target="_blank" rel="noopener noreferrer">https://www.atestados.pr.gov.br/solicitante/validar</a></text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo10" name="arquivo10" onchange="updateFileName('arquivo10')">
+                <label for="arquivo10" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo10"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Identificação e cadastro de Estrangeiro - Polícia Federal (Se for o caso)<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo11" name="arquivo11" onchange="updateFileName('arquivo11')">
+                <label for="arquivo11" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo11"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Comprovante de Residência<span class="asterisco">*</span></label>
+                <text>Água ou Luz (No comprovante tem que conter Rua, Número, Complemento, Bairro, Cidade, Estado, CEP)</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo12" name="arquivo12" onchange="updateFileName('arquivo12')">
+                <label for="arquivo12" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo12"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Registro Profissional Emitido Pelo Orgão de Classe (Se for o Caso)<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo13" name="arquivo13" onchange="updateFileName('arquivo13')">
+                <label for="arquivo13" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo13"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Comprovante de Vacinação - Covid-19<span class="asterisco">*</span></label>
+                <text>Emitido no site  <a href="https://meususdigital.saude.gov.br/inicio" target="_blank" rel="noopener noreferrer">https://meususdigital.saude.gov.br/inicio</a></text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo14" name="arquivo14" onchange="updateFileName('arquivo14')">
+                <label for="arquivo14" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo14"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Currículo Atualizado<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo16" name="arquivo16" onchange="updateFileName('arquivo16')">
+                <label for="arquivo16" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo16"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Certidão de Nascimento (caso seja Solteiro(a) / Certidão de Casamento caso seja Casado(a)<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo17" name="arquivo17" onchange="updateFileName('arquivo17')">
+                <label for="arquivo17" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo17"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Documentos do Cônjuge RG/CNH; CPF; Grau de Instrução (Apenas para dependência no IR)<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo18" name="arquivo18" onchange="updateFileName('arquivo18')">
+                <label for="arquivo18" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo18"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>Certidão de Nascimento (ou RG) e CPF dos Filhos (Dep. No IR menores de 2 anos receberão Auxílio Creche).<span class="asterisco">*</span></label>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo19" name="arquivo19" onchange="updateFileName('arquivo19')">
+                <label for="arquivo19" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo19"></div>
+            </div>
+
+    
+
+            <div class="form-box">
+                <label>CTPS Digital (Carteira de Trabalho Digital)<span class="asterisco">*</span></label>
+                <text>Tirar foto do cartão do PIS ou basta entrar no aplicativo Caixa Tem</text>
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo20" name="arquivo20" onchange="updateFileName('arquivo20')">
+                <label for="arquivo20" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo20"></div>
+            </div>
+
+
+
+            <div class="form-box">
+                <label>Foto Digital<span class="asterisco">*</span></label>
+                <img src="/static/css/image/foto-rosto.png" alt="Logo da Empresa" class="logo">
+                <br><br>
+                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
+                <br><br>
+                <input type="file" id="arquivo21" name="arquivo21" onchange="updateFileName('arquivo21')">
+                <label for="arquivo21" class="custom-file-upload">
+                    <i class="fas fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-arquivo21"></div>
+            </div>
             
-            
-
-        </div>
-
-        <!-- Data de Nascimento -->
-        <div class="form-box">
-            <label>Data de Nascimento:  <span class="asterisco">*</span></label>
-            <text>Preencha sua Data de Nascimento</text>
-            <input type="date" name="nascimento" required>        
-            
-        </div>
-
-        <!-- CPF -->
-        <div class="form-box">
-            <label>CPF:  <span class="asterisco">*</span></label>
-            <text>Preencha somente com números sem pontuação</text>
-            <input type="text" name="cpf" required placeholder="Sua resposta">       
-        </div>
-
-        <!-- RG -->
-        <div class="form-box">
-            <label>RG:  <span class="asterisco">*</span></label>
-            <text>Preencha seu RG com Orgão Expedidor (Ex. SSP-PR / SEJUSP-PR) </text>
-            <input type="text" name="rg" required placeholder="Sua resposta">
-        </div>
-
-        <!-- PIS -->
-        <div class="form-box">
-            <label>PIS:  <span class="asterisco">*</span></label>
-            <text>Preencha somente o número de PIS, você encontra ele na carteira de trabalho ou no App Caixa Tem</text>
-            <input type="text" name="pis" required placeholder="Sua resposta">
-        </div>
-
-        <!-- Endereço -->
-        <div class="form-box">
-            <label>Endereço:  <span class="asterisco">*</span></label>
-            <text>Preencha com Endereço Completo e Bairro (Rua, Av, TV, Praça...)</text>
-            <input type="text" name="endereco" required placeholder="Sua resposta">
-        </div>
-
-        <!-- CEP -->
-        <div class="form-box">
-            <label>CEP:  <span class="asterisco">*</span></label>
-            <input type="text" name="cep" required placeholder="Sua resposta">
-        </div>
-
-        <!-- Cidade -->
-        <div class="form-box">
-            <label>Cidade:  <span class="asterisco">*</span></label>
-            <input type="text" name="cidade" required placeholder="Sua resposta">
-        </div>
-
-        <!-- Estado -->
-        <div class="form-box">
-            <label>Estado:  <span class="asterisco">*</span></label>
-            <input type="text" name="estado" required placeholder="Sua resposta">
-        </div>
-
-        <!-- Celular -->
-        <div class="form-box">
-            <label>Celular:  <span class="asterisco">*</span></label>
-            <input type="text" name="celular" required placeholder="Sua resposta">
-        </div>
-
-        <!-- Email -->
-        <div class="form-box">
-            <label>Email:  <span class="asterisco">*</span></label>
-            <input type="text" name="email" required placeholder="Sua resposta">
-        </div>
-
-        <!-- Estado Civil -->
-        <div class="form-box">
-            <label>Estado Civil:  <span class="asterisco">*</span></label>
-            <div>
-                <class = input type="radio" name="estado_civil" value="Solteiro(a)" required> Solteiro(a)<br>
-                <input type="radio" name="estado_civil" value="Solteiro(a)"> Solteiro(a)<br>
-                <input type="radio" name="estado_civil" value="Casado(a)"> Casado(a)<br>
-                <input type="radio" name="estado_civil" value="Viúvo(a)"> Viúvo(a)<br>
-                <input type="radio" name="estado_civil" value="Divorciado(a)"> Divorciado(a)<br>
-                <input type="radio" name="estado_civil" value="União Estável"> União Estável
+            <!-- Botão para Submeter o formulário -->
+            <div class="button-container">
+                <button class="btn-enviar"type="submit">Enviar Formulário</button>
+                <button class="btn-limpar" type="button" onclick="showStep1()">Voltar</button>
+                <button class="btn-limpar" type="button" onclick="limparArquivos()">Limpar</button>
+            </div>
+            <br><br>
+            <text>Nunca envie senhas pelo Formulários Google.</text>
+            <div class="center-text">
+                <text>Este formulário foi criado em THE BEST MULTISERVICOS E ADMINISTRACAO LTDA.
+                Does this form look suspicious? Relatório</text>
             </div>
         </div>
 
-        <!-- Raça/Cor -->
-        <div class="form-box">
-            <label>Raça/Cor:  <span class="asterisco">*</span></label>
-            <text>Preencha de Acordo com a Certidão de Nascimento</text>
-            <div>
-                <input type="radio" name="raca_cor" value="Branca" required> Branca<br>
-                <input type="radio" name="raca_cor" value="Preta"> Preta<br>
-                <input type="radio" name="raca_cor" value="Parda"> Parda<br>
-                <input type="radio" name="raca_cor" value="Amarela"> Amarela<br>
-                <input type="radio" name="raca_cor" value="Indígena"> Indígena
-            </div>
-        </div>
-
-        <!-- Uniforme Camisa Social -->
-        <div class="form-box">
-            <label>Uniforme Camisa Social:  <span class="asterisco">*</span></label>
-            <div>
-                <input type="radio" name="camisa_social" value="PP" required> PP<br>
-                <input type="radio" name="camisa_social" value="P"> P<br>
-                <input type="radio" name="camisa_social" value="M"> M<br>
-                <input type="radio" name="camisa_social" value="G"> G<br>
-                <input type="radio" name="camisa_social" value="GG1"> GG1<br>
-                <input type="radio" name="camisa_social" value="GG2"> GG2<br>
-                <input type="radio" name="camisa_social" value="GG3"> GG3
-            </div>
-        </div>
-
-        <!-- Uniforme Polo -->
-        <div class="form-box">
-            <label>Uniforme Polo:  <span class="asterisco">*</span></label>
-            <div>
-                <input type="radio" name="camisa_polo" value="PP" required> PP<br>
-                <input type="radio" name="camisa_polo" value="P"> P<br>
-                <input type="radio" name="camisa_polo" value="M"> M<br>
-                <input type="radio" name="camisa_polo" value="G"> G<br>
-                <input type="radio" name="camisa_polo" value="GG1"> GG1<br>
-                <input type="radio" name="camisa_polo" value="GG2"> GG2<br>
-                <input type="radio" name="camisa_polo" value="GG3"> GG3<br>
-                <input type="radio" name="camisa_polo" value="GG4"> GG4
-            </div>
-        </div>
-        <div class="form-box">
-            <label for="cnh">Foto da CNH ou RG:  <span class="asterisco">*</span></label>
-            <text>Foto ou PDF(Obrigatório frente e verso do documento.)</text>
-            <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" capture="camera" required>
-        </div>
-        
-
-        <!-- Primeiro Emprego -->
-        <div class="form-box">
-            <label>Primeiro Emprego? <span class="asterisco">*</span></label>
-            <div>
-                <input type="radio" name="primeiro_emprego" value="Sim" required> Sim<br>
-                <input type="radio" name="primeiro_emprego" value="Não"> Não
-            </div>
-        </div>
-
-        <div class="form-box">
-            <label>Irá utilizar vale tansporte?  <span class="asterisco">*</span></label>
-            <div>
-                <input type="radio" name="vale_transporte" value="Sim" required> Sim<br>
-                <input type="radio" name="vale_transporte" value="Não"> Não
-            </div>
-        </div>
-        <!-- Botões -->
-
-
-        <div class="button-container">
-            <button type="submit" class="btn-enviar">Enviar</button>
-            <button type="reset" class="btn-limpar">Limpar Formulário</button>
-        </div>
         
     </form>
+    <!-- Script para atualizar o nome do arquivo -->
+    <script>
+        function updateFileName(inputId) {
+            // Pega o input de arquivo usando o ID
+            var input = document.getElementById(inputId);
+            
+            // Pega o nome do arquivo se existir, caso contrário, exibe uma mensagem padrão
+            var fileName = input.files[0] ? input.files[0].name : "Nenhum arquivo selecionado";
+            
+            // Modifica o conteúdo da div que exibe o nome do arquivo
+            // Usamos o ID do input para encontrar a div correta
+            document.getElementById("file-name-" + inputId).textContent = fileName;
+        }
+    </script>
+    
+
+    <script>
+        // Função para exibir a segunda etapa
+        function showStep2() {
+            document.getElementById("step1").style.display = "none";  // Esconde o Step 1
+            document.getElementById("step2").style.display = "block"; // Exibe o Step 2
+        }
+        // Função para exibir a Step 1 novamente
+        function showStep1() {
+            document.getElementById("step2").style.display = "none"; // Esconde Step 2
+            document.getElementById("step1").style.display = "block"; // Exibe Step 1
+        }
+
+        function limparArquivos() {
+            // Seleciona todos os inputs de arquivo
+            var inputsArquivo = document.querySelectorAll('input[type="file"]');
+            
+            // Percorre todos os inputs e limpa seus valores
+            inputsArquivo.forEach(function(input) {
+                input.value = ""; // Limpa o input de arquivo
+                
+                // Seleciona a div correspondente que exibe o nome do arquivo e limpa o texto
+                var fileNameDiv = document.getElementById("file-name-" + input.id);
+                if (fileNameDiv) {
+                    fileNameDiv.textContent = "";
+                }
+            });
+        }
+        
+
+    </script>
+
 </body>
 </html>
 
+
+
+
+
+<!-- <button type="submit" class="submit-btn">Enviar</button>
+<button type="reset" class="reset-btn">Limpar Formulário</button> -->
 
 <!-- <button type="submit" class="submit-btn">Enviar</button>
 <button type="reset" class="reset-btn">Limpar Formulário</button> -->

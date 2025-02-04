@@ -28,6 +28,11 @@ form {
     margin-top: 18px;
 }
 
+.form-box-g {
+    background-color: #f0ebf8!important;
+
+}
+
 /* Logos */
 .form-box .logo {
     max-width: 100%;
@@ -237,4 +242,128 @@ hr {
     background-color: rgba(128, 0, 128, 0.2); /* Fundo ligeiramente mais opaco */
     color: black; /* Texto permanece branco */
 }
+
+
+.form-box, .custom-form {
+    display: inline-block; /* Mantém o mesmo comportamento */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 18px;
+    box-sizing: border-box; /* Evita que padding e borda alterem o tamanho */
+    vertical-align: top; /* Garante alinhamento correto caso fiquem lado a lado */
+}
+
+.custom-form {
+    padding: 0; /* Remove padding extra que pode estar afetando o tamanho */
+    background-color: transparent; /* Remove qualquer fundo branco */
+    border: none; /* Remove bordas brancas indesejadas */
+    overflow: hidden; /* Evita qualquer corte de conteúdo */
+}
+
+.custom-form .form-header {
+    background-color: #6a0dad;
+    color: white;
+    padding: 5px;
+    text-align: left;
+    font-size: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 6px 6px 0 0;
+}
+
+.custom-form .form-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 0 0 6px 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-form h2 {
+    padding-left: 15px; /* Ajuste o valor conforme necessário */
+}
+
+
+.texto-menor {
+    font-size: 12px; /* Ajuste conforme necessário */
+    color: gray; /* Opcional: muda a cor para diferenciar */
+}
+
+
+
+/* styles arquivos */
+
+/* Ocultar o input original */
+input[type="file"] {
+    display: none;
+}
+
+/* Estilo para o botão customizado em todos os inputs de arquivo */
+.custom-file-upload {
+    background-color: transparent;
+    color: #1E90FF; /* Cor azul para o ícone e texto */
+    border: 1px solid #1E90FF; /* Borda azul */
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Ícone do botão (seta para cima) */
+.custom-file-upload i {
+    margin-right: 5px;
+}
+
+/* Estilo para quando o botão estiver em foco */
+.custom-file-upload:hover {
+    background-color: #e0f7ff; /* Cor de fundo levemente azul ao passar o mouse */
+}
+
+/* Exibição do nome do arquivo selecionado */
+.file-name {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+.center-text {
+    text-align: center;  /* Alinha o texto ao centro */
+    margin-top: 10px;     /* Espaçamento acima, se necessário */
+}
+
+.center-text p {
+    font-size: 5px; /* Definindo um tamanho de fonte para o parágrafo */
+    color: #333;     /* Cor do texto */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
