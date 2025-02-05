@@ -194,101 +194,9 @@
                 </div>
             </div>
 
-            <div class="form-box">
-                <label for="cnh">Foto da CNH ou RG: <span class="asterisco">*</span></label>
-                <text>Foto ou PDF (Obrigatório frente e verso do documento.)</text>
-                <br><br>
+
             
-                <!-- Opção de upload manual -->
-                <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" required onchange="updateFileName('cnh')">
-                <label for="cnh" class="custom-file-upload">
-                    <i class="fa-upload"></i> Escolher Arquivo
-                </label>
-                <div class="file-name" id="file-name-cnh"></div>
-                <text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ou</text>
-                <!-- Botão para abrir a câmera -->
-                <br><br>
-                <button class="btn-captura"type="button" onclick="abrirCamera()" style="margin-left: 14px;">📷 Capturar imagem</button>
-            
-                <!-- Área da câmera -->
-                <div id="cameraContainer" style="display: none; position: relative;">
-                    <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
-                    <div class="overlay"></div>
-                    <button type="button" onclick="capturarFoto()">📸 Capturar</button>
-                </div>
-            
-                <!-- Elementos para armazenar a imagem capturada -->
-                <canvas id="canvas" style="display: none;"></canvas>
-                <img id="fotoCapturada" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
-                
-                <!-- Input oculto para enviar a imagem para o backend -->
-                <input type="hidden" id="imagemBase64" name="imagemBase64">
-            </div>
-            
-            <script>
-                let videoStream = null;
-            
-                function abrirCamera() {
-                    const video = document.getElementById('video');
-                    const cameraContainer = document.getElementById('cameraContainer');
-            
-                    cameraContainer.style.display = 'block';
-            
-                    // Acessar a câmera
-                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                        .then(stream => {
-                            video.srcObject = stream;
-                            videoStream = stream;
-                        })
-                        .catch(err => {
-                            console.error("Erro ao acessar a câmera:", err);
-                            alert("Erro ao acessar a câmera!");
-                        });
-                }
-            
-                function capturarFoto() {
-                    const video = document.getElementById('video');
-                    const canvas = document.getElementById('canvas');
-                    const fotoCapturada = document.getElementById('fotoCapturada');
-                    const inputImagemBase64 = document.getElementById('imagemBase64');
-            
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-            
-                    // Captura a imagem
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-                    // Converte para formato Base64
-                    const imagemBase64 = canvas.toDataURL('image/png');
-            
-                    // Exibe a imagem capturada
-                    fotoCapturada.src = imagemBase64;
-                    fotoCapturada.style.display = 'block';
-            
-                    // Salva a imagem no input oculto para envio ao Flask
-                    inputImagemBase64.value = imagemBase64;
-            
-                    // Fecha a câmera após captura
-                    if (videoStream) {
-                        videoStream.getTracks().forEach(track => track.stop());
-                    }
-                    document.getElementById('cameraContainer').style.display = 'none';
-                }
-            </script>
-            
-            <style>
-                .overlay {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 300px;
-                    height: 180px;
-                    border: 3px solid red;
-                    transform: translate(-50%, -50%);
-                    background: rgba(255, 0, 0, 0.2);
-                }
-            </style>
+
             
 
 
@@ -341,7 +249,99 @@
                 </label>
                 <div class="file-name" id="file-name-arquivo1"></div>
             </div>
-
+            <div class="form-box">
+                <label for="cnh">Foto da CNH ou RG: <span class="asterisco">*</span></label>
+                <text>Foto ou PDF (Obrigatório frente e verso do documento.)</text>
+                <br><br>
+            
+                <!-- Opção de upload manual -->
+                
+                <input type="file" id="cnh" name="cnh" accept="image/*,application/pdf" required onchange="updateFileName('cnh')">
+                <label for="cnh" class="custom-file-upload">
+                    <i class="fa-upload"></i> Escolher Arquivo
+                </label>
+                <div class="file-name" id="file-name-cnh"></div>
+                <text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ou</text>
+                <!-- Botão para abrir a câmera -->
+                <br><br>
+                <button class="btn-captura"type="button" onclick="abrirCamera()" style="margin-left: 14px;">📷 Capturar imagem</button>
+            
+                <!-- Área da câmera -->
+                <div id="cameraContainer" style="display: none; position: relative;">
+                    <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
+                    <div class="overlay"></div>
+                    <button type="button" onclick="capturarFoto()">📸 Capturar</button>
+                </div>
+            
+                <!-- Elementos para armazenar a imagem capturada -->
+                <canvas id="canvas" style="display: none;"></canvas>
+                <img id="fotoCapturada" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
+                
+                <!-- Input oculto para enviar a imagem para o backend -->
+                <input type="hidden" id="imagemBase64" name="imagemBase64">
+            </div>
+            <script>
+                let videoStream = null;
+            
+                function abrirCamera() {
+                    const video = document.getElementById('video');
+                    const cameraContainer = document.getElementById('cameraContainer');
+            
+                    cameraContainer.style.display = 'block';
+            
+                    // Acessar a câmera
+                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                        .then(stream => {
+                            video.srcObject = stream;
+                            videoStream = stream;
+                        })
+                        .catch(err => {
+                            console.error("Erro ao acessar a câmera:", err);
+                            alert("Erro ao acessar a câmera!");
+                        });
+                }
+            
+                function capturarFoto() {
+                    const video = document.getElementById('video');
+                    const canvas = document.getElementById('canvas');
+                    const inputCnh = document.getElementById('cnh');
+                
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                    // Converte a imagem para Blob (arquivo)
+                    canvas.toBlob(blob => {
+                        const file = new File([blob], "foto_capturada.png", { type: "image/png" });
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        inputCnh.files = dataTransfer.files; // Atribui o arquivo ao input de CNH
+                
+                        // Atualiza a exibição do nome do arquivo
+                        updateFileName('cnh');
+                    }, "image/png");
+                
+                    // Fecha a câmera após a captura
+                    if (videoStream) {
+                        videoStream.getTracks().forEach(track => track.stop());
+                    }
+                    document.getElementById('cameraContainer').style.display = 'none';
+                }
+            </script>
+            <style>
+                .overlay {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 300px;
+                    height: 180px;
+                    border: 3px solid red;
+                    transform: translate(-50%, -50%);
+                    background: rgba(255, 0, 0, 0.2);
+                }
+            </style>
 
             <div class="form-box">
                 <label>CPF<span class="asterisco">*</span></label>
@@ -606,7 +606,9 @@
 
             <div class="form-box">
                 <label>Foto de Selfie<span class="asterisco">*</span></label>
+                <img src="/static/css/image/foto-rosto.png" alt="Logo da Empresa" class="logo">
                 <br><br>
+                <input type="hidden" id="imagemSelfieBase64" name="imagemSelfieBase64">
                 <button type="button" onclick="abrirCameraSelfie()">📸 Tirar Selfie</button>
                 <div id="selfieCameraContainer" style="display: none; position: relative; margin-top: 10px;">
                     <video id="videoSelfie" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
@@ -720,36 +722,31 @@
             }
         }
 
-        // Função para capturar a selfie e fechar a câmera
         function capturarSelfie() {
             var canvasSelfie = document.getElementById("canvasSelfie");
             var videoSelfie = document.getElementById("videoSelfie");
             var fotoCapturadaSelfie = document.getElementById("fotoCapturadaSelfie");
-
+        
             // Desenha o quadro do vídeo no canvas
             canvasSelfie.width = videoSelfie.videoWidth;
             canvasSelfie.height = videoSelfie.videoHeight;
             canvasSelfie.getContext("2d").drawImage(videoSelfie, 0, 0);
-
-            // Converte a imagem capturada para Base64
+        
+            // Converte a imagem para Base64
             var imagemSelfieBase64 = canvasSelfie.toDataURL("image/png");
+        
+            // Exibe a selfie capturada
             fotoCapturadaSelfie.src = imagemSelfieBase64;
             fotoCapturadaSelfie.style.display = "block";
-
-            // Armazena a imagem no campo oculto
+        
+            // Armazena a imagem no campo oculto para envio no formulário
             document.getElementById("imagemSelfieBase64").value = imagemSelfieBase64;
-
-            // Cria o link para download da imagem
-            var downloadLink = document.getElementById("downloadLink");
-            downloadLink.href = imagemSelfieBase64;
-            downloadLink.download = "selfie.png";
-            downloadLink.style.display = "block"; // Exibe o link para o usuário
-
-            // Para a câmera e fecha o container
-            var selfieCameraContainer = document.getElementById("selfieCameraContainer");
-            selfieCameraContainer.style.display = "none";
-            window.streamSelfie.getTracks().forEach(track => track.stop()); // Interrompe o fluxo de vídeo
+        
+            // Fecha a câmera
+            document.getElementById("selfieCameraContainer").style.display = "none";
+            window.streamSelfie.getTracks().forEach(track => track.stop());
         }
+        
 
 
 
