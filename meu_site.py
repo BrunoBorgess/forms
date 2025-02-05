@@ -14,6 +14,7 @@ from flask_mail import Mail
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
 app.secret_key = "your_secret_key"
 
 UPLOAD_FOLDER = 'uploads'
