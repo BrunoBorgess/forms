@@ -605,17 +605,24 @@
 
 
             <div class="form-box">
-                <label>Foto Digital<span class="asterisco">*</span></label>
-                <img src="/static/css/image/foto-rosto.png" alt="Logo da Empresa" class="logo">
+                <label>Foto de Selfie<span class="asterisco">*</span></label>
                 <br><br>
-                <text class="texto-menor">Faça upload de até 5 arquivos aceitos: PDF, document ou image. O tamanho máximo é de 10 MB por item.</text>
-                <br><br>
-                <input type="file" id="arquivo21" name="arquivo21" onchange="updateFileName('arquivo21')">
-                <label for="arquivo21" class="custom-file-upload">
-                    <i class="fas fa-upload"></i> Escolher Arquivo
-                </label>
-                <div class="file-name" id="file-name-arquivo21"></div>
+                <button type="button" onclick="abrirCameraSelfie()">📸 Tirar Selfie</button>
+                <div id="selfieCameraContainer" style="display: none; position: relative; margin-top: 10px;">
+                    <video id="videoSelfie" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
+                    <div class="overlay" id="overlaySelfie"></div>
+                    <button type="button" onclick="capturarSelfie()">📸 Capturar Selfie</button>
+                </div>
+                
+                <!-- Elementos para armazenar a imagem capturada -->
+                <canvas id="canvasSelfie" style="display: none;"></canvas>
+                <img id="fotoCapturadaSelfie" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
+                
+                <!-- Input oculto para enviar a imagem para o backend -->
+                <input type="hidden" id="imagemSelfieBase64" name="imagemSelfieBase64">
             </div>
+            
+            
             
             <!-- Botão para Submeter o formulário -->
             <div class="button-container">
@@ -694,7 +701,45 @@
             // Mostra novamente a área da câmera
             cameraContainer.style.display = "block";
         }
-        
+                // Função para abrir a câmera da selfie
+        function abrirCameraSelfie() {
+            var videoSelfie = document.getElementById("videoSelfie");
+            var selfieCameraContainer = document.getElementById("selfieCameraContainer");
+            selfieCameraContainer.style.display = "block";
+            
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+                    .then(function(stream) {
+                        videoSelfie.srcObject = stream;
+                    })
+                    .catch(function(error) {
+                        alert("Erro ao acessar a câmera: " + error);
+                    });
+            } else {
+                alert("A câmera não é suportada pelo seu navegador.");
+            }
+        }
+
+        // Função para capturar a selfie
+        function capturarSelfie() {
+            var canvasSelfie = document.getElementById("canvasSelfie");
+            var videoSelfie = document.getElementById("videoSelfie");
+            var fotoCapturadaSelfie = document.getElementById("fotoCapturadaSelfie");
+
+            // Desenha o quadro do vídeo no canvas
+            canvasSelfie.width = videoSelfie.videoWidth;
+            canvasSelfie.height = videoSelfie.videoHeight;
+            canvasSelfie.getContext("2d").drawImage(videoSelfie, 0, 0);
+
+            // Converte a imagem capturada para Base64
+            var imagemSelfieBase64 = canvasSelfie.toDataURL("image/png");
+            fotoCapturadaSelfie.src = imagemSelfieBase64;
+            fotoCapturadaSelfie.style.display = "block";
+
+            // Armazena a imagem no campo oculto
+            document.getElementById("imagemSelfieBase64").value = imagemSelfieBase64;
+        }
+
 
     </script>
 
