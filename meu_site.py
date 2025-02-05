@@ -11,10 +11,12 @@ from email import encoders
 from flask import Flask, request, redirect, render_template, flash, url_for, session
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
+import base64
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
+# Configurações de upload de arquivos
 UPLOAD_FOLDER = 'uploads'
 UPLOAD_FOLDER_2 = 'upload2'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -35,7 +37,7 @@ mail = Mail(app)
 tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
-# 🟢 Funções para processar CNH
+# Funções de processamento de CNH
 def process_pdf(pdf_path):
     """Extrai CPF e Nome da CNH em PDF."""
     try:
@@ -69,35 +71,18 @@ def validate_pdf_data(pdf_cpf, pdf_nome, form_cpf, form_nome):
     """Compara os dados extraídos da CNH com os informados no formulário."""
     return re.sub(r'\D', '', pdf_cpf) == re.sub(r'\D', '', form_cpf) and pdf_nome.lower().strip() == form_nome.lower().strip()
 
-# 🟢 Função para listar arquivos em uma pasta
+# Funções auxiliares
 def get_uploaded_files(directory):
     """Retorna lista de arquivos dentro da pasta especificada."""
     return [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 
-# 🟢 Função para apagar arquivos após envio
 def clear_folder(folder_path):
     """Remove todos os arquivos dentro da pasta especificada."""
     if os.path.exists(folder_path):
         for file in os.listdir(folder_path):
             os.remove(os.path.join(folder_path, file))
 
-import os
-import base64
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
-from flask import flash
-
-# 🟢 Função para listar arquivos na pasta de uploads
-def get_uploaded_files(folder_path):
-    """Retorna a lista de arquivos no diretório especificado."""
-    if not os.path.exists(folder_path):
-        return []
-    return [os.path.join(folder_path, f) for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-
-# 🟢 Função para enviar e-mail com anexos
+# Função para enviar e-mail com anexos
 def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
             celular, email, estado_civil, raca_cor, camisa_social, camisa_polo,
             primeiro_emprego, vale_transporte, cnh_path, imagemBase64, validation_message):
@@ -134,7 +119,7 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
     """
     msg.attach(MIMEText(body, 'html'))
 
-    # 🟢 Anexar CNH
+    # Anexar CNH
     if cnh_path:
         with open(cnh_path, 'rb') as attachment:
             part = MIMEBase('application', 'octet-stream')
@@ -143,10 +128,10 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
             part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(cnh_path)}")
             msg.attach(part)
 
-    # 🟢 Anexar a imagem capturada (se existir)
+    # Anexar imagem capturada (se existir)
     if imagemBase64:
         try:
-            imagemBase64 = imagemBase64.split(",")[1]  # Remove o prefixo 'data:image/png;base64,'
+            imagemBase64 = imagemBase64.split(",")[1]
             imagem_bytes = base64.b64decode(imagemBase64)
 
             temp_image_path = "uploads/cnh_capturada.png"
@@ -160,22 +145,21 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
                 part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(temp_image_path)}")
                 msg.attach(part)
 
-            # Apagar a imagem temporária após envio
             os.remove(temp_image_path)
 
         except Exception as e:
             flash(f"Erro ao processar a imagem capturada: {e}", "danger")
 
-    # 🟢 Anexar arquivos do Step 2
+    # Anexar arquivos do Step 2
     for file_path in get_uploaded_files(app.config['UPLOAD_FOLDER_2']):
         with open(file_path, 'rb') as attachment:
             part = MIMEBase('application', 'octet-stream')
-            part.set_payload(attachment.read())  # Lê o arquivo
-            encoders.encode_base64(part)  # Converte para Base64 (formato seguro para envio)
-            part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(file_path)}")  # Define o nome do anexo
-            msg.attach(part)  # Anexa o arquivo ao e-mail
+            part.set_payload(attachment.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(file_path)}")
+            msg.attach(part)
 
-    # 🟢 Enviar o e-mail
+    # Enviar o e-mail
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
@@ -184,11 +168,11 @@ def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
     except Exception as e:
         flash(f"Erro ao enviar o e-mail: {e}", "danger")
 
-    # 🟢 Apagar arquivos após o envio
+    # Apagar arquivos após o envio
     clear_folder(app.config['UPLOAD_FOLDER'])
     clear_folder(app.config['UPLOAD_FOLDER_2'])
 
-# 🟢 Rota principal do formulário
+# Rota principal do formulário
 @app.route("/", methods=["GET", "POST"])
 def form():
     if "step" not in session:

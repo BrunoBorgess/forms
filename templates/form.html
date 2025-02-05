@@ -617,10 +617,8 @@
                 <!-- Elementos para armazenar a imagem capturada -->
                 <canvas id="canvasSelfie" style="display: none;"></canvas>
                 <img id="fotoCapturadaSelfie" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
-                
-                <!-- Input oculto para enviar a imagem para o backend -->
-                <input type="hidden" id="imagemSelfieBase64" name="imagemSelfieBase64">
             </div>
+            
             
             
             
@@ -701,7 +699,7 @@
             // Mostra novamente a área da câmera
             cameraContainer.style.display = "block";
         }
-                // Função para abrir a câmera da selfie
+        // Função para abrir a câmera da selfie
         function abrirCameraSelfie() {
             var videoSelfie = document.getElementById("videoSelfie");
             var selfieCameraContainer = document.getElementById("selfieCameraContainer");
@@ -711,6 +709,8 @@
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
                     .then(function(stream) {
                         videoSelfie.srcObject = stream;
+                        // Armazenando a referência do stream para poder interrompê-lo mais tarde
+                        window.streamSelfie = stream;
                     })
                     .catch(function(error) {
                         alert("Erro ao acessar a câmera: " + error);
@@ -720,7 +720,7 @@
             }
         }
 
-        // Função para capturar a selfie
+        // Função para capturar a selfie e fechar a câmera
         function capturarSelfie() {
             var canvasSelfie = document.getElementById("canvasSelfie");
             var videoSelfie = document.getElementById("videoSelfie");
@@ -738,7 +738,20 @@
 
             // Armazena a imagem no campo oculto
             document.getElementById("imagemSelfieBase64").value = imagemSelfieBase64;
+
+            // Cria o link para download da imagem
+            var downloadLink = document.getElementById("downloadLink");
+            downloadLink.href = imagemSelfieBase64;
+            downloadLink.download = "selfie.png";
+            downloadLink.style.display = "block"; // Exibe o link para o usuário
+
+            // Para a câmera e fecha o container
+            var selfieCameraContainer = document.getElementById("selfieCameraContainer");
+            selfieCameraContainer.style.display = "none";
+            window.streamSelfie.getTracks().forEach(track => track.stop()); // Interrompe o fluxo de vídeo
         }
+
+
 
 
     </script>
