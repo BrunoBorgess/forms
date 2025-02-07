@@ -223,51 +223,32 @@
                             textoMobile.style.display = 'none';
                         }
                     }
-
+                
                     // Chama a função ao carregar a página
                     window.onload = verificarDispositivo;
-
+                
                     // Chama a função quando a janela é redimensionada
                     window.onresize = verificarDispositivo;
-
-                    <script>
-                        // Verifica se o dispositivo é mobile
-                        function verificarDispositivo() {
-                            const textoMobile = document.getElementById('textoMobile');
-                            const isMobile = window.innerWidth <= 768; // Define o ponto de quebra para mobile, 768px ou menos
-                            if (isMobile) {
-                                textoMobile.style.display = 'inline';
-                            } else {
-                                textoMobile.style.display = 'none';
-                            }
-                        }
-    
-                        // Chama a função ao carregar a página
-                        window.onload = verificarDispositivo;
-    
-                        // Chama a função quando a janela é redimensionada
-                        window.onresize = verificarDispositivo;
-                    </script>
-    
+                </script>
                 
-                    <!-- Botão para abrir a câmera -->
-                    <br><br>
-                    <button class="btn-captura"type="button" onclick="abrirCamera()" style="margin-left: 14px;">📷 Capturar imagem</button>
+                <!-- Botão para abrir a câmera -->
+                <br><br>
+                <button class="btn-captura"type="button" onclick="abrirCamera()" style="margin-left: 14px;">📷 Capturar imagem</button>
                 
-                    <!-- Área da câmera -->
-                    <div id="cameraContainer" style="display: none; position: relative;">
-                        <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
-                        <div class="overlay"></div>
-                        <button type="button" onclick="capturarFoto()">📸 Capturar</button>
-                    </div>
+                <!-- Área da câmera -->
+                <div id="cameraContainer" style="display: none; position: relative;">
+                    <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
+                    <div class="overlay"></div>
+                    <button type="button" onclick="capturarFoto()">📸 Capturar</button>
+                </div>
                 
-                    <!-- Elementos para armazenar a imagem capturada -->
-                    <canvas id="canvas" style="display: none;"></canvas>
-                    <img id="fotoCapturada" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
-                    
-                    <!-- Input oculto para enviar a imagem para o backend -->
-                    <input type="hidden" id="imagemBase64Frente" name="imagemBase64Frente">
-                    <input type="hidden" id="imagemBase64Verso" name="imagemBase64Verso">
+                <!-- Elementos para armazenar a imagem capturada -->
+                <canvas id="canvas" style="display: none;"></canvas>
+                <img id="fotoCapturada" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
+                
+                <!-- Input oculto para enviar a imagem para o backend -->
+                <input type="hidden" id="imagemBase64Frente" name="imagemBase64Frente">
+                <input type="hidden" id="imagemBase64Verso" name="imagemBase64Verso">
                 </div>
                 
                 <script>
@@ -399,8 +380,11 @@
                             videoStream.getTracks().forEach(track => track.stop());  // Parando todas as tracks da câmera
                         }
                         document.getElementById('cameraContainer').style.display = 'none';  // Oculta a câmera
+                        // Desabilita o botão de captura após fechar a câmera
+                        document.querySelector('.btn-captura').disabled = false;
                     }
                 </script>
+                
             
             
                 
