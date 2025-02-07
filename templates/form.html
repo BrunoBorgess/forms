@@ -207,7 +207,30 @@
                     <i class="fa-upload"></i> Escolher Arquivo
                 </label>
                 <div class="file-name" id="file-name-cnh"></div>
-                <text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ou</text>
+                <!-- Parte onde o texto "ou" só aparece em mobile -->
+                <div id="textoMobile" style="display:none;">
+                    <text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ou</text>
+                </div>
+
+                <script>
+                    // Verifica se o dispositivo é mobile
+                    function verificarDispositivo() {
+                        const textoMobile = document.getElementById('textoMobile');
+                        const isMobile = window.innerWidth <= 768; // Define o ponto de quebra para mobile, 768px ou menos
+                        if (isMobile) {
+                            textoMobile.style.display = 'inline';
+                        } else {
+                            textoMobile.style.display = 'none';
+                        }
+                    }
+
+                    // Chama a função ao carregar a página
+                    window.onload = verificarDispositivo;
+
+                    // Chama a função quando a janela é redimensionada
+                    window.onresize = verificarDispositivo;
+                </script>
+
             
                 <!-- Botão para abrir a câmera -->
                 <br><br>
@@ -232,6 +255,26 @@
             <script>
                 let videoStream = null;
                 let etapaFoto = "frente";  // Variável para controlar qual foto (frente ou verso) está sendo tirada
+            
+                // Função para detectar se o usuário está em um dispositivo móvel
+                function isMobile() {
+                    return /Mobi|Android/i.test(navigator.userAgent);
+                }
+            
+                // Mostrar ou esconder a opção de câmera dependendo do dispositivo
+                function ajustarVisibilidadeCamera() {
+                    const cameraButton = document.querySelector(".btn-captura");
+                    if (isMobile()) {
+                        cameraButton.style.display = "inline-block";  // Exibe o botão da câmera em dispositivos móveis
+                    } else {
+                        cameraButton.style.display = "none";  // Esconde o botão da câmera em desktops
+                    }
+                }
+            
+                // Executar a verificação ao carregar a página
+                window.onload = function() {
+                    ajustarVisibilidadeCamera();
+                };
             
                 function abrirCamera() {
                     const video = document.getElementById('video');
@@ -265,7 +308,7 @@
                     // Captura a imagem
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-                     // Converte para formato Base64
+                    // Converte para formato Base64
                     const imagemBase64 = canvas.toDataURL('image/png');
             
                     // Exibe a imagem capturada
@@ -282,16 +325,28 @@
                         realizarOCR(imagemBase64, "frente");
                     } else if (etapaFoto === "verso") {
                         inputImagemBase64Verso.value = imagemBase64;
-                        alert("Foto do verso capturada. A câmera será fechada.");
-                        
+                        alert("Foto do verso capturada. Agora, por favor, confirme se deseja salvar as fotos.");
+            
                         // Processa o texto da imagem para verificar CPF (verso)
                         realizarOCR(imagemBase64, "verso");
             
-                        // Fecha a câmera após captura
-                        if (videoStream) {
-                            videoStream.getTracks().forEach(track => track.stop());
-                        }
-                        document.getElementById('cameraContainer').style.display = 'none';
+                        // Exibe a janela de confirmação para salvar as fotos
+                        confirmarSalvarFotos();
+                    }
+                }
+            
+                function confirmarSalvarFotos() {
+                    const confirmar = confirm("Você está satisfeito com as fotos tiradas? Clique em 'OK' para salvar ou 'Cancelar' para tirar novamente.");
+            
+                    if (confirmar) {
+                        // Salva as fotos e fecha a câmera
+                        alert("Fotos salvas com sucesso!");
+                        fecharCamera();  // Fecha a câmera
+                    } else {
+                        // Reinicia o processo, permitindo que o usuário tire as fotos novamente
+                        alert("Você pode tirar as fotos novamente.");
+                        etapaFoto = "frente";  // Reseta para a captura da frente
+                        abrirCamera();  // Reabre a câmera para tirar as fotos novamente
                     }
                 }
             
@@ -306,7 +361,7 @@
                     ).then(({ data: { text } }) => {
                         console.log('Texto reconhecido:', text);
             
-                         // Regex para tentar encontrar o CPF
+                        // Regex para tentar encontrar o CPF
                         const regexCPF = /\d{3}\.\d{3}\.\d{3}-\d{2}/;
                         const cpfEncontrado = text.match(regexCPF);
             
@@ -318,7 +373,17 @@
                         }
                     });
                 }
+            
+                // Função para parar a câmera
+                function fecharCamera() {
+                    const video = document.getElementById('video');
+                    if (videoStream) {
+                        videoStream.getTracks().forEach(track => track.stop());  // Parando todas as tracks da câmera
+                    }
+                    document.getElementById('cameraContainer').style.display = 'none';  // Oculta a câmera
+                }
             </script>
+            
                 
                 <style>
                     /* Estilo do retângulo para alinhar a foto da CNH */
