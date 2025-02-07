@@ -8,39 +8,24 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-from flask import Flask, request, redirect, render_template, flash, url_for, session
-from flask_mail import Mail
-from werkzeug.utils import secure_filename
-
-
+from flask import Flask, request, redirect, render_template, flash, url_for
 
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
-
 UPLOAD_FOLDER = 'uploads'
-UPLOAD_FOLDER_2 = 'upload2'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['UPLOAD_FOLDER_2'] = UPLOAD_FOLDER_2
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(UPLOAD_FOLDER_2, exist_ok=True)
 
-# Configurações do Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'lucasford677@gmail.com'
-app.config['MAIL_PASSWORD'] = 'wess hvyi nxzc pvgh'
-app.config['MAIL_DEFAULT_SENDER'] = 'lucasford677@gmail.com'
-mail = Mail(app)
-
-
-
-# Configuração do Tesseract
+# Caminho para o executável do Tesseract
 tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+# Caminho para a pasta tessdata
+tessdata_prefix = r"C:\Program Files\Tesseract-OCR\tessdata"
+
+# Configura as variáveis de ambiente corretamente
+os.environ['TESSDATA_PREFIX'] = tessdata_prefix
 pytesseract.pytesseract.tesseract_cmd = tesseract_path
-# Definir o caminho correto para os arquivos de idioma do Tesseract
-os.environ["TESSDATA_PREFIX"] = r"C:\Program Files\Tesseract-OCR\tessdata"
 
 # Funções para processar o PDF e extrair CPF e nome
 def crop_cpf_region(image):
@@ -134,168 +119,163 @@ def validate_pdf_data(pdf_cpf, pdf_nome, form_cpf, form_nome):
         return False, "O nome informado não corresponde ao nome extraído do PDF."
     return True, "Dados validados"
 
-
-# 🟢 Função para apagar arquivos após envio
-def clear_folder(folder_path):
-    """Remove todos os arquivos dentro da pasta especificada."""
-    if os.path.exists(folder_path):
-        for file in os.listdir(folder_path):
-            os.remove(os.path.join(folder_path, file))
-
-import os
-import base64
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
-from flask import flash
-
-# 🟢 Função para listar arquivos na pasta de uploads
-def get_uploaded_files(folder_path):
-    """Retorna a lista de arquivos no diretório especificado."""
-    if not os.path.exists(folder_path):
-        return []
-    return [os.path.join(folder_path, f) for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-
-# 🟢 Função para enviar e-mail com anexos
+# Função para enviar o e-mail
 def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
-            celular, email, estado_civil, raca_cor, camisa_social, camisa_polo,
-            primeiro_emprego, vale_transporte, cnh_path, imagemBase64, validation_message):
-    
+            celular, email, estado_civil, raca_cor, camisa_social,
+            camisa_polo, primeiro_emprego, vale_transporte, cnh_path, validation_message, arquivos_paths):
     sender_email = "lucasford677@gmail.com"
     sender_password = "wess hvyi nxzc pvgh"
     receiver_email = "lucasb.empreendimentos@gmail.com"
+
+    # Estilo para a validação
+    validation_style = """
+    <div style="background-color: #4CAF50; color: white; padding: 10px; font-size: 16px; font-weight: bold; border-radius: 5px;">
+        ✅ {validation_message}
+    </div>
+    """
+
+    # Substituindo a variável `validation_message` pelo texto passado
+    validation_message = validation_style.format(validation_message=validation_message)
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = receiver_email
     msg['Subject'] = "Formulário de Emprego"
 
-    # Corpo do e-mail
+    # Corpo do e-mail com a validação em verde no topo
     body = f"""
-    ✅ {validation_message}
-    <p><strong>Nome Completo:</strong> {nome}</p>
-    <p><strong>Data de Nascimento:</strong> {nascimento}</p>
-    <p><strong>CPF:</strong> {cpf}</p>
-    <p><strong>RG:</strong> {rg}</p>
-    <p><strong>PIS:</strong> {pis}</p>
-    <p><strong>Endereço:</strong> {endereco}</p>
-    <p><strong>CEP:</strong> {cep}</p>
-    <p><strong>Cidade:</strong> {cidade}</p>
-    <p><strong>Estado:</strong> {estado}</p>
-    <p><strong>Celular:</strong> {celular}</p>
-    <p><strong>Email:</strong> {email}</p>
-    <p><strong>Estado Civil:</strong> {estado_civil}</p>
-    <p><strong>Raça/Cor:</strong> {raca_cor}</p>
-    <p><strong>Uniforme Camisa Social:</strong> {camisa_social}</p>
-    <p><strong>Uniforme Polo:</strong> {camisa_polo}</p>
-    <p><strong>Primeiro Emprego:</strong> {primeiro_emprego}</p>
-    <p><strong>Vale transporte:</strong> {vale_transporte}</p>
+    {validation_message}
+    <p>Nome Completo: {nome}</p>
+    <p>Data de Nascimento: {nascimento}</p>
+    <p>CPF: {cpf}</p>
+    <p>RG: {rg}</p>
+    <p>PIS: {pis}</p>
+    <p>Endereço: {endereco}</p>
+    <p>CEP: {cep}</p>
+    <p>Cidade: {cidade}</p>
+    <p>Estado: {estado}</p>
+    <p>Celular: {celular}</p>
+    <p>Email: {email}</p>
+    <p>Estado Civil: {estado_civil}</p>
+    <p>Raça/Cor: {raca_cor}</p>
+    <p>Uniforme Camisa Social: {camisa_social}</p>
+    <p>Uniforme Polo: {camisa_polo}</p>
+    <p>Primeiro Emprego: {primeiro_emprego}</p>
+    <p>Vale transporte: {vale_transporte}</p>
     """
-    msg.attach(MIMEText(body, 'html'))
 
-    # 🟢 Anexar CNH
+    msg.attach(MIMEText(body, 'html'))  # Corpo agora é HTML
+
     if cnh_path:
-        with open(cnh_path, 'rb') as attachment:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(attachment.read())
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(cnh_path)}")
-            msg.attach(part)
+        attachment = MIMEBase('application', 'octet-stream')
+        with open(cnh_path, 'rb') as attachment_file:
+            attachment.set_payload(attachment_file.read())
+        encoders.encode_base64(attachment)
+        attachment.add_header('Content-Disposition', f"attachment; filename={os.path.basename(cnh_path)}")
+        msg.attach(attachment)
+    
+    # Anexa os arquivos da Step 2 (uploads2/)
+    for arquivo_path in arquivos_paths:
+        if os.path.exists(arquivo_path):  # Garante que o arquivo existe
+            attachment = MIMEBase('application', 'octet-stream')
+            with open(arquivo_path, 'rb') as attachment_file:
+                attachment.set_payload(attachment_file.read())
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', f"attachment; filename={os.path.basename(arquivo_path)}")
+            msg.attach(attachment)
 
-    # 🟢 Anexar a imagem capturada (se existir)
-    if imagemBase64:
-        try:
-            imagemBase64 = imagemBase64.split(",")[1]  # Remove o prefixo 'data:image/png;base64,'
-            imagem_bytes = base64.b64decode(imagemBase64)
-
-            temp_image_path = "uploads/cnh_capturada.png"
-            with open(temp_image_path, "wb") as f:
-                f.write(imagem_bytes)
-
-            with open(temp_image_path, 'rb') as attachment:
-                part = MIMEBase('application', 'octet-stream')
-                part.set_payload(attachment.read())
-                encoders.encode_base64(part)
-                part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(temp_image_path)}")
-                msg.attach(part)
-
-            # Apagar a imagem temporária após envio
-            os.remove(temp_image_path)
-
-        except Exception as e:
-            flash(f"Erro ao processar a imagem capturada: {e}", "danger")
-
-    # 🟢 Anexar arquivos do Step 2
-    for file_path in get_uploaded_files(app.config['UPLOAD_FOLDER_2']):
-        with open(file_path, 'rb') as attachment:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(attachment.read())  # Lê o arquivo
-            encoders.encode_base64(part)  # Converte para Base64 (formato seguro para envio)
-            part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(file_path)}")  # Define o nome do anexo
-            msg.attach(part)  # Anexa o arquivo ao e-mail
-
-    # 🟢 Enviar o e-mail
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(msg)
-        flash("Formulário enviado com sucesso!", "success")
+        # Após o e-mail ser enviado, limpa as pastas uploads e uploads2
+        limpar_pastas()
+
     except Exception as e:
-        flash(f"Erro ao enviar o e-mail: {e}", "danger")
+        print(f"Erro ao enviar o email: {e}")
 
-    # 🟢 Apagar arquivos após o envio
-    clear_folder(app.config['UPLOAD_FOLDER'])
-    clear_folder(app.config['UPLOAD_FOLDER_2'])
+    if cnh_path:
+        os.remove(cnh_path)
 
-# 🟢 Rota principal do formulário
+def limpar_pastas():
+    pastas = ['uploads', 'uploads2']
+    for pasta in pastas:
+        for arquivo in os.listdir(pasta):
+            caminho_arquivo = os.path.join(pasta, arquivo)
+            try:
+                if os.path.isfile(caminho_arquivo):
+                    os.remove(caminho_arquivo)
+            except Exception as e:
+                print(f"Erro ao remover {caminho_arquivo}: {e}")
+
+# Página inicial com o formulário
 @app.route("/", methods=["GET", "POST"])
 def form():
-    if "step" not in session:
-        session["step"] = 1
-
     if request.method == "POST":
-        if session["step"] == 1:
-            session.update(request.form.to_dict())
-            session["step"] = 2
-            return redirect(url_for("form"))
+        nome = request.form.get("nome")
+        nascimento = request.form.get("nascimento")
+        cpf = request.form.get("cpf")
+        rg = request.form.get("rg")
+        pis = request.form.get("pis")
+        endereco = request.form.get("endereco")
+        cep = request.form.get("cep")
+        cidade = request.form.get("cidade")
+        estado = request.form.get("estado")
+        celular = request.form.get("celular")
+        email = request.form.get("email")
+        estado_civil = request.form.get("estado_civil")
+        raca_cor = request.form.get("raca_cor")
+        camisa_social = request.form.get("camisa_social")
+        camisa_polo = request.form.get("camisa_polo")
+        primeiro_emprego = request.form.get("primeiro_emprego")
+        vale_transporte = request.form.get("vale_transporte")
 
-        elif session["step"] == 2:
-            cnh_file = request.files.get("cnh")
-            cnh_path = None
+        cnh_file = request.files["cnh"]
+        cnh_path = None
+        if cnh_file:
+            cnh_path = os.path.join(app.config['UPLOAD_FOLDER'], cnh_file.filename)
+            cnh_file.save(cnh_path)
+        
+        arquivos_paths = []
+        for i in range(1, 21):  # 21 arquivos 
+            arquivo = request.files.get(f"arquivo{i}")
+            if arquivo and arquivo.filename:
+                BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Obtém o diretório base do projeto
+                upload_folder_step2 = os.path.join(BASE_DIR, 'uploads2')  # Cria uploads2 no mesmo nível de uploads
+                os.makedirs(upload_folder_step2, exist_ok=True)  # Garante que a pasta existe
+                arquivo_path = os.path.join(upload_folder_step2, arquivo.filename)
+                arquivo.save(arquivo_path)
+                arquivos_paths.append(arquivo_path)
 
-            if cnh_file and cnh_file.filename:
-                filename = secure_filename(cnh_file.filename)
-                cnh_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                cnh_file.save(cnh_path)
+        # Processar o PDF
+        validation_message = ""
+        if cnh_path:
+            pdf_cpf, pdf_nome = process_pdf(cnh_path)
+            print(f"CPF detectado: {pdf_cpf}")
+            print(f"Nome detectado: {pdf_nome}")
 
-                # 🟢 Chama as funções para extrair Nome e CPF da imagem
-                image = Image.open(cnh_path)
-                pdf_cpf = extract_cpf_from_image(image)
-                pdf_nome = extract_name_from_image(image)
+            # Validar CPF e Nome
+            valid, validation_message = validate_pdf_data(pdf_cpf, pdf_nome, cpf, nome)
+            if not valid:
+                flash(validation_message, "danger")
+                return redirect(url_for("form"))
 
-                # 🟢 Validação: Somente envia o e-mail se CPF e Nome forem válidos
-                if pdf_cpf != "CPF não encontrado" and pdf_nome != "Nome não encontrado":
-                    session_data = {key: value for key, value in session.items() if key != "step"}
+        try:
+            send_email(
+                nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
+                celular, email, estado_civil, raca_cor, camisa_social,
+                camisa_polo, primeiro_emprego, vale_transporte, cnh_path, validation_message, arquivos_paths 
+            )
+            flash("Formulário enviado com sucesso!", "success")
+        except Exception as e:
+            flash(f"Erro ao enviar o formulário: {e}", "danger")
 
-                    # 🟢 Salva os arquivos adicionais
-                    for i in range(1, 21):
-                        file = request.files.get(f"arquivo{i}")
-                        if file and file.filename:
-                            filename = secure_filename(file.filename)
-                            file.save(os.path.join(app.config['UPLOAD_FOLDER_2'], filename))
+        return redirect(url_for("form"))
 
-                    # 🟢 Envia o e-mail
-                    send_email(**session_data, cnh_path=cnh_path, validation_message="✅ Dados Validados")
+    return render_template("form.html")
 
-                    session.clear()
-                    return redirect(url_for("form"))
-                else:
-                    flash("❌ Erro: Nome ou CPF não foram encontrados na CNH. Verifique e tente novamente.", "danger")
-                    return redirect(url_for("form"))
 
-    return render_template("form.html", step=session["step"])
 
 if __name__ == "__main__":
     app.run(debug=True)

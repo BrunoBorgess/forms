@@ -229,160 +229,179 @@
 
                     // Chama a função quando a janela é redimensionada
                     window.onresize = verificarDispositivo;
-                </script>
 
-            
-                <!-- Botão para abrir a câmera -->
-                <br><br>
-                <button class="btn-captura"type="button" onclick="abrirCamera()" style="margin-left: 14px;">📷 Capturar imagem</button>
-            
-                <!-- Área da câmera -->
-                <div id="cameraContainer" style="display: none; position: relative;">
-                    <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
-                    <div class="overlay"></div>
-                    <button type="button" onclick="capturarFoto()">📸 Capturar</button>
-                </div>
-            
-                <!-- Elementos para armazenar a imagem capturada -->
-                <canvas id="canvas" style="display: none;"></canvas>
-                <img id="fotoCapturada" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
+                    <script>
+                        // Verifica se o dispositivo é mobile
+                        function verificarDispositivo() {
+                            const textoMobile = document.getElementById('textoMobile');
+                            const isMobile = window.innerWidth <= 768; // Define o ponto de quebra para mobile, 768px ou menos
+                            if (isMobile) {
+                                textoMobile.style.display = 'inline';
+                            } else {
+                                textoMobile.style.display = 'none';
+                            }
+                        }
+    
+                        // Chama a função ao carregar a página
+                        window.onload = verificarDispositivo;
+    
+                        // Chama a função quando a janela é redimensionada
+                        window.onresize = verificarDispositivo;
+                    </script>
+    
                 
-                <!-- Input oculto para enviar a imagem para o backend -->
-                <input type="hidden" id="imagemBase64Frente" name="imagemBase64Frente">
-                <input type="hidden" id="imagemBase64Verso" name="imagemBase64Verso">
-            </div>
-            
-            <script>
-                let videoStream = null;
-                let etapaFoto = "frente";  // Variável para controlar qual foto (frente ou verso) está sendo tirada
-            
-                // Função para detectar se o usuário está em um dispositivo móvel
-                function isMobile() {
-                    return /Mobi|Android/i.test(navigator.userAgent);
-                }
-            
-                // Mostrar ou esconder a opção de câmera dependendo do dispositivo
-                function ajustarVisibilidadeCamera() {
-                    const cameraButton = document.querySelector(".btn-captura");
-                    if (isMobile()) {
-                        cameraButton.style.display = "inline-block";  // Exibe o botão da câmera em dispositivos móveis
-                    } else {
-                        cameraButton.style.display = "none";  // Esconde o botão da câmera em desktops
-                    }
-                }
-            
-                // Executar a verificação ao carregar a página
-                window.onload = function() {
-                    ajustarVisibilidadeCamera();
-                };
-            
-                function abrirCamera() {
-                    const video = document.getElementById('video');
-                    const cameraContainer = document.getElementById('cameraContainer');
+                    <!-- Botão para abrir a câmera -->
+                    <br><br>
+                    <button class="btn-captura"type="button" onclick="abrirCamera()" style="margin-left: 14px;">📷 Capturar imagem</button>
+                
+                    <!-- Área da câmera -->
+                    <div id="cameraContainer" style="display: none; position: relative;">
+                        <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 10px;"></video>
+                        <div class="overlay"></div>
+                        <button type="button" onclick="capturarFoto()">📸 Capturar</button>
+                    </div>
+                
+                    <!-- Elementos para armazenar a imagem capturada -->
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <img id="fotoCapturada" style="display: none; width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;">
                     
-                    cameraContainer.style.display = 'block';
-            
-                    // Acessar a câmera
-                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                        .then(stream => {
-                            video.srcObject = stream;
-                            videoStream = stream;
-                        })
-                        .catch(err => {
-                            console.error("Erro ao acessar a câmera:", err);
-                            alert("Erro ao acessar a câmera!");
-                        });
-                }
-            
-                function capturarFoto() {
-                    const video = document.getElementById('video');
-                    const canvas = document.getElementById('canvas');
-                    const fotoCapturada = document.getElementById('fotoCapturada');
-                    const inputImagemBase64Frente = document.getElementById('imagemBase64Frente');
-                    const inputImagemBase64Verso = document.getElementById('imagemBase64Verso');
-            
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-            
-                    // Captura a imagem
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-                    // Converte para formato Base64
-                    const imagemBase64 = canvas.toDataURL('image/png');
-            
-                    // Exibe a imagem capturada
-                    fotoCapturada.src = imagemBase64;
-                    fotoCapturada.style.display = 'block';
-            
-                    // Salva a imagem no input oculto dependendo da etapa
-                    if (etapaFoto === "frente") {
-                        inputImagemBase64Frente.value = imagemBase64;
-                        alert("Foto da frente capturada. Agora, tire a foto do verso.");
-                        etapaFoto = "verso";  // Muda para a próxima etapa (captura do verso)
-            
-                        // Processa o texto da imagem para verificar CPF (frente)
-                        realizarOCR(imagemBase64, "frente");
-                    } else if (etapaFoto === "verso") {
-                        inputImagemBase64Verso.value = imagemBase64;
-                        alert("Foto do verso capturada. Agora, por favor, confirme se deseja salvar as fotos.");
-            
-                        // Processa o texto da imagem para verificar CPF (verso)
-                        realizarOCR(imagemBase64, "verso");
-            
-                        // Exibe a janela de confirmação para salvar as fotos
-                        confirmarSalvarFotos();
+                    <!-- Input oculto para enviar a imagem para o backend -->
+                    <input type="hidden" id="imagemBase64Frente" name="imagemBase64Frente">
+                    <input type="hidden" id="imagemBase64Verso" name="imagemBase64Verso">
+                </div>
+                
+                <script>
+                    let videoStream = null;
+                    let etapaFoto = "frente";  // Variável para controlar qual foto (frente ou verso) está sendo tirada
+                
+                    // Função para detectar se o usuário está em um dispositivo móvel
+                    function isMobile() {
+                        return /Mobi|Android/i.test(navigator.userAgent);
                     }
-                }
-            
-                function confirmarSalvarFotos() {
-                    const confirmar = confirm("Você está satisfeito com as fotos tiradas? Clique em 'OK' para salvar ou 'Cancelar' para tirar novamente.");
-            
-                    if (confirmar) {
-                        // Salva as fotos e fecha a câmera
-                        alert("Fotos salvas com sucesso!");
-                        fecharCamera();  // Fecha a câmera
-                    } else {
-                        // Reinicia o processo, permitindo que o usuário tire as fotos novamente
-                        alert("Você pode tirar as fotos novamente.");
-                        etapaFoto = "frente";  // Reseta para a captura da frente
-                        abrirCamera();  // Reabre a câmera para tirar as fotos novamente
-                    }
-                }
-            
-                // Função para processar o OCR e tentar encontrar um CPF
-                function realizarOCR(imagemBase64, lado) {
-                    Tesseract.recognize(
-                        imagemBase64,
-                        'por',  // idioma português
-                        {
-                            logger: (m) => console.log(m),  // Para monitorar o progresso
-                        }
-                    ).then(({ data: { text } }) => {
-                        console.log('Texto reconhecido:', text);
-            
-                        // Regex para tentar encontrar o CPF
-                        const regexCPF = /\d{3}\.\d{3}\.\d{3}-\d{2}/;
-                        const cpfEncontrado = text.match(regexCPF);
-            
-                        if (cpfEncontrado) {
-                            alert(`CPF encontrado no ${lado}: ${cpfEncontrado[0]}`);
-                            // Aqui você pode fazer a validação ou o envio do CPF, conforme sua lógica
+                
+                    // Mostrar ou esconder a opção de câmera dependendo do dispositivo
+                    function ajustarVisibilidadeCamera() {
+                        const cameraButton = document.querySelector(".btn-captura");
+                        if (isMobile()) {
+                            cameraButton.style.display = "inline-block";  // Exibe o botão da câmera em dispositivos móveis
                         } else {
-                            alert(`CPF não encontrado no ${lado}.`);
+                            cameraButton.style.display = "none";  // Esconde o botão da câmera em desktops
                         }
-                    });
-                }
-            
-                // Função para parar a câmera
-                function fecharCamera() {
-                    const video = document.getElementById('video');
-                    if (videoStream) {
-                        videoStream.getTracks().forEach(track => track.stop());  // Parando todas as tracks da câmera
                     }
-                    document.getElementById('cameraContainer').style.display = 'none';  // Oculta a câmera
-                }
-            </script>
+                
+                    // Executar a verificação ao carregar a página
+                    window.onload = function() {
+                        ajustarVisibilidadeCamera();
+                    };
+                
+                    function abrirCamera() {
+                        const video = document.getElementById('video');
+                        const cameraContainer = document.getElementById('cameraContainer');
+                        
+                        cameraContainer.style.display = 'block';
+                
+                        // Acessar a câmera
+                        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                            .then(stream => {
+                                video.srcObject = stream;
+                                videoStream = stream;
+                            })
+                            .catch(err => {
+                                console.error("Erro ao acessar a câmera:", err);
+                                alert("Erro ao acessar a câmera!");
+                            });
+                    }
+                
+                    function capturarFoto() {
+                        const video = document.getElementById('video');
+                        const canvas = document.getElementById('canvas');
+                        const fotoCapturada = document.getElementById('fotoCapturada');
+                        const inputImagemBase64Frente = document.getElementById('imagemBase64Frente');
+                        const inputImagemBase64Verso = document.getElementById('imagemBase64Verso');
+                
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                
+                        // Captura a imagem
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                        // Converte para formato Base64
+                        const imagemBase64 = canvas.toDataURL('image/png');
+                
+                        // Exibe a imagem capturada
+                        fotoCapturada.src = imagemBase64;
+                        fotoCapturada.style.display = 'block';
+                
+                        // Salva a imagem no input oculto dependendo da etapa
+                        if (etapaFoto === "frente") {
+                            inputImagemBase64Frente.value = imagemBase64;
+                            alert("Foto da frente capturada. Agora, tire a foto do verso.");
+                            etapaFoto = "verso";  // Muda para a próxima etapa (captura do verso)
+                
+                            // Processa o texto da imagem para verificar CPF (frente)
+                            realizarOCR(imagemBase64, "frente");
+                        } else if (etapaFoto === "verso") {
+                            inputImagemBase64Verso.value = imagemBase64;
+                            alert("Foto do verso capturada. Agora, por favor, confirme se deseja salvar as fotos.");
+                
+                            // Processa o texto da imagem para verificar CPF (verso)
+                            realizarOCR(imagemBase64, "verso");
+                
+                            // Exibe a janela de confirmação para salvar as fotos
+                            confirmarSalvarFotos();
+                        }
+                    }
+                
+                    function confirmarSalvarFotos() {
+                        const confirmar = confirm("Você está satisfeito com as fotos tiradas? Clique em 'OK' para salvar ou 'Cancelar' para tirar novamente.");
+                
+                        if (confirmar) {
+                            // Salva as fotos e fecha a câmera
+                            alert("Fotos salvas com sucesso!");
+                            fecharCamera();  // Fecha a câmera
+                        } else {
+                            // Reinicia o processo, permitindo que o usuário tire as fotos novamente
+                            alert("Você pode tirar as fotos novamente.");
+                            etapaFoto = "frente";  // Reseta para a captura da frente
+                            abrirCamera();  // Reabre a câmera para tirar as fotos novamente
+                        }
+                    }
+                
+                    // Função para processar o OCR e tentar encontrar um CPF
+                    function realizarOCR(imagemBase64, lado) {
+                        Tesseract.recognize(
+                            imagemBase64,
+                            'por',  // idioma português
+                            {
+                                logger: (m) => console.log(m),  // Para monitorar o progresso
+                            }
+                        ).then(({ data: { text } }) => {
+                            console.log('Texto reconhecido:', text);
+                
+                            // Regex para tentar encontrar o CPF
+                            const regexCPF = /\d{3}\.\d{3}\.\d{3}-\d{2}/;
+                            const cpfEncontrado = text.match(regexCPF);
+                
+                            if (cpfEncontrado) {
+                                alert(`CPF encontrado no ${lado}: ${cpfEncontrado[0]}`);
+                                // Aqui você pode fazer a validação ou o envio do CPF, conforme sua lógica
+                            } else {
+                                alert(`CPF não encontrado no ${lado}.`);
+                            }
+                        });
+                    }
+                
+                    // Função para parar a câmera
+                    function fecharCamera() {
+                        const video = document.getElementById('video');
+                        if (videoStream) {
+                            videoStream.getTracks().forEach(track => track.stop());  // Parando todas as tracks da câmera
+                        }
+                        document.getElementById('cameraContainer').style.display = 'none';  // Oculta a câmera
+                    }
+                </script>
+            
             
                 
                 <style>
