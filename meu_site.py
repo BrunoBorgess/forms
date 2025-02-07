@@ -1,4 +1,3 @@
-
 import os
 import fitz  # PyMuPDF
 from PIL import Image
@@ -13,12 +12,14 @@ from flask import Flask, request, redirect, render_template, flash, url_for, ses
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
 
+
+
+
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
 app.secret_key = "your_secret_key"
 
 UPLOAD_FOLDER = 'uploads'
-UPLOAD_FOLDER_2 = 'uploads2'
+UPLOAD_FOLDER_2 = 'upload2'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER_2'] = UPLOAD_FOLDER_2
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -33,48 +34,106 @@ app.config['MAIL_PASSWORD'] = 'wess hvyi nxzc pvgh'
 app.config['MAIL_DEFAULT_SENDER'] = 'lucasford677@gmail.com'
 mail = Mail(app)
 
+
+
 # Configuração do Tesseract
 tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 pytesseract.pytesseract.tesseract_cmd = tesseract_path
+# Definir o caminho correto para os arquivos de idioma do Tesseract
+os.environ["TESSDATA_PREFIX"] = r"C:\Program Files\Tesseract-OCR\tessdata"
 
-# 🟢 Funções para processar CNH
-def process_pdf(pdf_path):
-    """Extrai CPF e Nome da CNH em PDF."""
-    try:
-        doc = fitz.open(pdf_path)
-        pix = doc[0].get_pixmap(dpi=300)
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], "cnh_temp.png")
-        pix.save(image_path)
-        doc.close()
+# Funções para processar o PDF e extrair CPF e nome
+def crop_cpf_region(image):
+    cpf_region = image.crop((588, 695, 777, 730))
+    scale_factor = 3
+    cpf_region = cpf_region.resize(
+        (cpf_region.width * scale_factor, cpf_region.height * scale_factor),
+        Image.Resampling.LANCZOS
+    )
+    cpf_region.save('cpf_region_debug.png')
+    return cpf_region
 
-        image = Image.open(image_path)
-        cpf = extract_cpf_from_image(image)
-        name = extract_name_from_image(image)
-        return cpf, name
-    except Exception as e:
-        print(f"Erro ao processar a CNH: {e}")
-        return "Erro ao processar", "Erro ao processar"
+def crop_name_region(image):
+    name_region = image.crop((304, 454, 929, 489))
+    scale_factor = 3
+    name_region = name_region.resize(
+        (name_region.width * scale_factor, name_region.height * scale_factor),
+        Image.Resampling.LANCZOS
+    )
+    name_region.save('name_region_debug.png')
+    return name_region
+
+def preprocess_image(image):
+    gray_image = image.convert('L')
+    gray_image.save("preprocessed_region.png")
+    return gray_image
 
 def extract_cpf_from_image(image):
-    """Extrai CPF da imagem da CNH."""
+    cpf_image = crop_cpf_region(image)
+    cpf_image = preprocess_image(cpf_image)
+    text = pytesseract.image_to_string(
+        cpf_image, config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789.-'
+    )
+    cleaned_text = ''.join(c for c in text if c.isdigit() or c in '.-')
     cpf_pattern = r'\d{3}[.\s]?\d{3}[.\s]?\d{3}[-.\s]?\d{2}'
-    text = pytesseract.image_to_string(image, config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789.-')
-    match = re.search(cpf_pattern, text)
-    return match.group(0) if match else "CPF não encontrado"
+    cpf_match = re.search(cpf_pattern, cleaned_text)
+    return cpf_match.group(0) if cpf_match else "CPF não encontrado"
 
 def extract_name_from_image(image):
-    """Extrai Nome da imagem da CNH."""
-    text = pytesseract.image_to_string(image, config='--oem 3 --psm 7')
-    return text.strip() if text else "Nome não encontrado"
+    name_image = crop_name_region(image)
+    name_image = preprocess_image(name_image)
+    text = pytesseract.image_to_string(name_image, config='--oem 3 --psm 7')
+    cleaned_text = text.strip()
+    return cleaned_text if cleaned_text else "Nome não encontrado"
 
+def convert_pdf_to_image_with_fitz(pdf_path, output_path):
+    try:
+        pdf_document = fitz.open(pdf_path)
+        page = pdf_document[0]
+        pix = page.get_pixmap(dpi=300)
+        image_path = os.path.join(output_path, "page_1.png")
+        pix.save(image_path)
+        pdf_document.close()
+        return image_path
+    except Exception as e:
+        print(f"Erro ao converter PDF para imagem: {e}")
+        return None
+
+def process_pdf(pdf_path):
+    output_path = "./uploads"
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    image_path = convert_pdf_to_image_with_fitz(pdf_path, output_path)
+    if not image_path:
+        return "Erro ao converter o PDF para imagem."
+
+    image = Image.open(image_path)
+    cpf = extract_cpf_from_image(image)
+    name = extract_name_from_image(image)
+
+    return cpf, name
+
+# Função para validar se os dados extraídos do PDF correspondem ao formulário
 def validate_pdf_data(pdf_cpf, pdf_nome, form_cpf, form_nome):
-    """Compara os dados extraídos da CNH com os informados no formulário."""
-    return re.sub(r'\D', '', pdf_cpf) == re.sub(r'\D', '', form_cpf) and pdf_nome.lower().strip() == form_nome.lower().strip()
+    """
+    Compara os dados extraídos do PDF com os dados fornecidos no formulário.
+    Retorna True se os dados coincidirem, caso contrário False.
+    """
+    # Ignora pontuações e espaços ao comparar CPF e Nome
+    cleaned_pdf_cpf = re.sub(r'\D', '', pdf_cpf)
+    cleaned_form_cpf = re.sub(r'\D', '', form_cpf)
 
-# 🟢 Função para listar arquivos em uma pasta
-def get_uploaded_files(directory):
-    """Retorna lista de arquivos dentro da pasta especificada."""
-    return [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+    # Converte tanto o nome extraído do PDF quanto o nome fornecido no formulário para maiúsculo
+    cleaned_pdf_nome = re.sub(r'\s+', '', pdf_nome.strip().upper())
+    cleaned_form_nome = re.sub(r'\s+', '', form_nome.strip().upper())
+
+    if cleaned_pdf_cpf != cleaned_form_cpf:
+        return False, "O CPF informado não corresponde ao CPF extraído do PDF."
+    if cleaned_pdf_nome != cleaned_form_nome:
+        return False, "O nome informado não corresponde ao nome extraído do PDF."
+    return True, "Dados validados"
+
 
 # 🟢 Função para apagar arquivos após envio
 def clear_folder(folder_path):
@@ -103,8 +162,6 @@ def get_uploaded_files(folder_path):
 def send_email(nome, nascimento, cpf, rg, pis, endereco, cep, cidade, estado,
             celular, email, estado_civil, raca_cor, camisa_social, camisa_polo,
             primeiro_emprego, vale_transporte, cnh_path, imagemBase64, validation_message):
-    print(f"Enviando e-mail com os dados: {nome}, {nascimento}, {cpf}, {rg}, {pis}")  # Adicione esse print
-
     
     sender_email = "lucasford677@gmail.com"
     sender_password = "wess hvyi nxzc pvgh"
@@ -207,28 +264,36 @@ def form():
         elif session["step"] == 2:
             cnh_file = request.files.get("cnh")
             cnh_path = None
+
             if cnh_file and cnh_file.filename:
                 filename = secure_filename(cnh_file.filename)
                 cnh_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 cnh_file.save(cnh_path)
 
-            for i in range(1, 21):
-                file = request.files.get(f"arquivo{i}")
-                if file and file.filename:
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER_2'], filename))
+                # 🟢 Chama as funções para extrair Nome e CPF da imagem
+                image = Image.open(cnh_path)
+                pdf_cpf = extract_cpf_from_image(image)
+                pdf_nome = extract_name_from_image(image)
 
-            session_data = {key: value for key, value in session.items() if key != "step"}
+                # 🟢 Validação: Somente envia o e-mail se CPF e Nome forem válidos
+                if pdf_cpf != "CPF não encontrado" and pdf_nome != "Nome não encontrado":
+                    session_data = {key: value for key, value in session.items() if key != "step"}
 
-            # 🔹 Renomeia "imagemSelfieBase64" para "imagemBase64" antes de chamar send_email()
-            if "imagemSelfieBase64" in session_data:
-                session_data["imagemBase64"] = session_data.pop("imagemSelfieBase64")
+                    # 🟢 Salva os arquivos adicionais
+                    for i in range(1, 21):
+                        file = request.files.get(f"arquivo{i}")
+                        if file and file.filename:
+                            filename = secure_filename(file.filename)
+                            file.save(os.path.join(app.config['UPLOAD_FOLDER_2'], filename))
 
-            send_email(**session_data, cnh_path=cnh_path, validation_message="Dados Validados")
+                    # 🟢 Envia o e-mail
+                    send_email(**session_data, cnh_path=cnh_path, validation_message="✅ Dados Validados")
 
-            session.clear()
-            return redirect(url_for("form"))
-
+                    session.clear()
+                    return redirect(url_for("form"))
+                else:
+                    flash("❌ Erro: Nome ou CPF não foram encontrados na CNH. Verifique e tente novamente.", "danger")
+                    return redirect(url_for("form"))
 
     return render_template("form.html", step=session["step"])
 
