@@ -10,4 +10,5 @@ O backend foi totalmente desenvolvido em Python com Flask, enquanto o frontend u
 https://github.com/user-attachments/assets/5705bb03-452a-48e6-ae3d-48f4dbc1ab12
 
 
+![WhatsApp Image 2025-03-20 at 17 07 04 (1)](https://github.com/user-attachments/assets/7d8c590e-13db-4e90-a56c-df8a12638a95)
 
